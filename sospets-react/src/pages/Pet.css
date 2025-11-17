@@ -1,0 +1,85 @@
+.pet-page-container {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.pet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.pet-header h1 {
+  margin: 0;
+  color: #333;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #0d6efd;
+  font-weight: 500;
+}
+
+.btn-cadastrar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: #d9534f; /* Vermelho do protótipo */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-cadastrar:hover {
+  background-color: #c9302c;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto; 
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+thead th {
+  background-color: #f1f1f1;
+  color: #555;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Cores alternadas como no protótipo */
+tbody tr:nth-child(odd) {
+  background-color: #fafafa;
+}
+tbody tr:nth-child(even) {
+  background-color: #fff;
+}

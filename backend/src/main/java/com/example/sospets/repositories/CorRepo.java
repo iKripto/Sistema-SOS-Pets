@@ -1,0 +1,7 @@
+package com.example.sospets.repositories;
+
+import com.example.sospets.entities.Cor;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CorRepo extends JpaRepository<Cor, Integer> {
+}

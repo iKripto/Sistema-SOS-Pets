@@ -1,0 +1,14 @@
+# Ignora arquivos do Git
+.git
+.gitignore
+
+# Ignora a pasta de build local
+target/
+
+# Ignora os bancos de dados locais H2
+data/
+data.mv.db
+data.trace.db
+
+# Ignora logs de erro do Java
+hs_err_pid*.log

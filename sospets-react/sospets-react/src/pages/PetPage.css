@@ -1,0 +1,132 @@
+.pet-page-container {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.pet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.pet-header h1 {
+  margin: 0;
+  color: #333;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #0d6efd;
+  font-weight: 500;
+}
+
+.btn-cadastrar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: #d9534f; /* Vermelho do protótipo */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-cadastrar:hover {
+  background-color: #c9302c;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* Para tabelas largas em telas pequenas */
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+thead th {
+  background-color: #f1f1f1;
+  color: #555;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Cores alternadas como no protótipo */
+tbody tr:nth-child(odd) {
+  background-color: #fafafa;
+}
+tbody tr:nth-child(even) {
+  background-color: #fff;
+}
+
+/* ... (todo o seu CSS existente) ... */
+
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-edit {
+  background-color: #f0ad4e; /* Laranja */
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #ec971f;
+}
+
+.btn-delete {
+  background-color: #d9534f; /* Vermelho */
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c9302c;
+}
+
+/* Adicione isso para exibir erros de exclusão */
+.form-error {
+  color: #d9534f;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
