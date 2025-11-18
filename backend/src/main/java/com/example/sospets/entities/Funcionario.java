@@ -24,7 +24,12 @@ public class Funcionario {
     private String profissao;
     private String endereco;
 
-    @OneToMany(mappedBy = "funcionario", cascade = CascadeType.REMOVE) 
+    // NOVOS CAMPOS PARA AUTENTICAÇÃO E LÓGICA DO SISTEMA
+    private String senha;
+    private String cargo; 
+    // FIM DOS NOVOS CAMPOS
+
+    @OneToMany(mappedBy = "funcionario")
     @JsonIgnore
     private List<Atendimento> atendimentos;
 }
