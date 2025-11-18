@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 // 1. Importar os ícones de ação
 import { Home, Plus, Trash2, Edit2 } from 'react-feather';
 // 2. Vamos REAPROVEITAR o CSS da página de Pets para manter o estilo
-import './PetPage.css'; //
+import './PetPage.css';
+
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+ //
 
 const TutorPage = () => {
   const [tutores, setTutores] = useState([]);
@@ -15,7 +19,7 @@ const TutorPage = () => {
     setLoading(true);
     try {
       // Endpoint do TutorController.java
-      const response = await fetch('http://localhost:8080/tutores');
+      const response = await fetch(`${API_BASE_URL}/tutores`);
       if (!response.ok) {
         throw new Error('Falha ao buscar dados dos tutores.');
       }
@@ -39,7 +43,7 @@ const TutorPage = () => {
     if (window.confirm("Tem certeza que deseja excluir este item?")) {
       setError(null);
       try {
-        const response = await fetch(`http://localhost:8080/tutores/${cpf}`, {
+        const response = await fetch(`${API_BASE_URL}/tutores/${cpf}`, {
           method: 'DELETE',
         }); //
 

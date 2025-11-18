@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Home, Plus, Trash2, Edit2 } from 'react-feather'; 
-import './PetPage.css'; // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/sospets-react/src/pages/PetPage.css]
+import './PetPage.css';
+
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+ // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/sospets-react/src/pages/PetPage.css]
 
 const PetPage = () => {
   const [pets, setPets] = useState([]);
@@ -16,7 +20,7 @@ const PetPage = () => {
       // ... (código de fetchPets inalterado) ...
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/animais');
+        const response = await fetch(`${API_BASE_URL}/animais`);
         if (!response.ok) {
           throw new Error('Falha ao buscar dados dos pets.');
         }
@@ -36,7 +40,7 @@ const PetPage = () => {
     if (window.confirm("Tem certeza que deseja excluir este item?")) {
       setError(null);
       try {
-        const response = await fetch(`http://localhost:8080/animais/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/animais/${id}`, {
           method: 'DELETE',
         });
         if (!response.ok) {

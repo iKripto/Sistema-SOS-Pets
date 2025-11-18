@@ -2,7 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Home } from 'react-feather';
-import './PetForm.css'; // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/sospets-react/src/pages/PetForm.css]
+import './PetForm.css';
+
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+ // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/sospets-react/src/pages/PetForm.css]
 
 const PetForm = () => {
   // 2. Obter o 'id' da URL. Será 'undefined' se for a rota /pets/novo
@@ -39,8 +43,8 @@ const PetForm = () => {
       try {
         // Sempre buscar Cores e Tutores
         const [coresRes, tutoresRes] = await Promise.all([
-          fetch('http://localhost:8080/cor'),
-          fetch('http://localhost:8080/tutores')
+          fetch(`${API_BASE_URL}/cor`),
+          fetch(`${API_BASE_URL}/tutores`)
         ]);
         
         const coresData = await coresRes.json();
@@ -51,7 +55,7 @@ const PetForm = () => {
 
         // Se estiver editando (isEditing === true), buscar dados do animal
         if (isEditing) {
-          const animalRes = await fetch(`http://localhost:8080/animais/${id}`);
+          const animalRes = await fetch(`${API_BASE_URL}/animais/${id}`);
           if (!animalRes.ok) throw new Error('Animal não encontrado.');
           
           const animal = await animalRes.json();
@@ -110,8 +114,8 @@ const PetForm = () => {
     
     // Define a URL e o Método corretos
     const url = isEditing 
-      ? `http://localhost:8080/animais/${id}` // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/backend/src/main/java/com/example/sospets/controllers/AnimalController.java]
-      : 'http://localhost:8080/animais';
+      ? `${API_BASE_URL}/animais/${id}` // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/backend/src/main/java/com/example/sospets/controllers/AnimalController.java]
+      : `${API_BASE_URL}/animais`;
       
     const method = isEditing ? 'PUT' : 'POST';
 

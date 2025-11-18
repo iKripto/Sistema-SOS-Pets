@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Home } from 'react-feather';
 // Vamos REAPROVEITAR o CSS do formulário de Pets
-import './PetForm.css'; // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/sospets-react/src/pages/PetForm.css]
+import './PetForm.css';
+
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+ // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/sospets-react/src/pages/PetForm.css]
 
 const ClinicForm = () => {
   const { id } = useParams(); // Pega o ID da URL
@@ -26,7 +30,7 @@ const ClinicForm = () => {
       setLoading(true);
       const fetchClinic = async () => {
         try {
-          const response = await fetch(`http://localhost:8080/clinicas/${id}`);
+          const response = await fetch(`${API_BASE_URL}/clinicas/${id}`);
           if (!response.ok) {
             throw new Error('Clínica não encontrada.');
           }
@@ -63,8 +67,8 @@ const ClinicForm = () => {
     };
 
     const url = isEditing 
-      ? `http://localhost:8080/clinicas/${id}` // PUT para editar [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/ClinicaController.java]
-      : 'http://localhost:8080/clinicas';      // POST para criar [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/ClinicaController.java]
+      ? `${API_BASE_URL}/clinicas/${id}` // PUT para editar [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/ClinicaController.java]
+      : `${API_BASE_URL}/clinicas`;      // POST para criar [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/ClinicaController.java]
       
     const method = isEditing ? 'PUT' : 'POST';
 

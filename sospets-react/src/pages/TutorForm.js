@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Home } from 'react-feather';
 // Vamos REAPROVEITAR o CSS do formulário de Pets
-import './PetForm.css'; //
+import './PetForm.css';
+
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+ //
 
 const TutorForm = () => {
   // O ID do tutor é o CPF, conforme TutorController.java
@@ -29,7 +33,7 @@ const TutorForm = () => {
       setLoading(true);
       const fetchTutor = async () => {
         try {
-          const response = await fetch(`http://localhost:8080/tutores/${cpf}`);
+          const response = await fetch(`${API_BASE_URL}/tutores/${cpf}`);
           if (!response.ok) {
             throw new Error('Tutor não encontrado.');
           }
@@ -60,8 +64,8 @@ const TutorForm = () => {
     setError('');
 
     const url = isEditing 
-      ? `http://localhost:8080/tutores/${cpf}` // PUT para editar
-      : 'http://localhost:8080/tutores';      // POST para criar
+      ? `${API_BASE_URL}/tutores/${cpf}` // PUT para editar
+      : `${API_BASE_URL}/tutores`;      // POST para criar
       
     const method = isEditing ? 'PUT' : 'POST';
 

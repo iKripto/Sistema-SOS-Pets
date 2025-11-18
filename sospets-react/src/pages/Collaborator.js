@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Home, Plus, Trash2, Edit2 } from 'react-feather';
 // Vamos reutilizar o CSS do PetPage para manter a consistência
-import './PetPage.css'; // [cite: ikripto/fullstacksospets/FullStackSosPets-377f8109a3631bb635d066f623b4f36508380df4/sospets-react/src/pages/PetPage.css]
+import './PetPage.css';
+
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+ // [cite: ikripto/fullstacksospets/FullStackSosPets-377f8109a3631bb635d066f623b4f36508380df4/sospets-react/src/pages/PetPage.css]
 
 const CollaboratorPage = () => {
   const [colaboradores, setColaboradores] = useState([]);
@@ -14,7 +18,7 @@ const CollaboratorPage = () => {
       setLoading(true);
       try {
         // Busca dados do endpoint de Funcionários (Colaboradores)
-        const response = await fetch('http://localhost:8080/funcionarios'); // [cite: ikripto/fullstacksospets/FullStackSosPets-377f8109a3631bb635d066f623b4f36508380df4/backend/src/main/java/com/example/sospets/controllers/FuncionarioController.java]
+        const response = await fetch(`${API_BASE_URL}/funcionarios`); // [cite: ikripto/fullstacksospets/FullStackSosPets-377f8109a3631bb635d066f623b4f36508380df4/backend/src/main/java/com/example/sospets/controllers/FuncionarioController.java]
         if (!response.ok) {
           throw new Error('Falha ao buscar dados dos colaboradores.');
         }
@@ -36,7 +40,7 @@ const CollaboratorPage = () => {
     if (window.confirm("Tem certeza que deseja excluir este item?")) {
       setError(null);
       try {
-        const response = await fetch(`http://localhost:8080/funcionarios/${cpf}`, {
+        const response = await fetch(`${API_BASE_URL}/funcionarios/${cpf}`, {
           method: 'DELETE',
         }); // [cite: ikripto/fullstacksospets/FullStackSosPets-377f8109a3631bb635d066f623b4f36508380df4/backend/src/main/java/com/example/sospets/controllers/FuncionarioController.java]
 

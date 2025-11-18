@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { Home, Plus, Trash2, Edit2 } from 'react-feather';
 import './AtendimentoPage.css';
 
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+
+
 const AtendimentoPage = () => {
   const [atendimentos, setAtendimentos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +16,7 @@ const AtendimentoPage = () => {
     const fetchAtendimentos = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/atendimentos');
+        const response = await fetch(`${API_BASE_URL}/atendimentos`);
         if (!response.ok) throw new Error('Falha ao buscar dados dos atendimentos.');
         const data = await response.json();
         setAtendimentos(data);
@@ -28,7 +32,7 @@ const AtendimentoPage = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Tem certeza que deseja excluir este atendimento?")) {
       try {
-        const response = await fetch(`http://localhost:8080/atendimentos/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/atendimentos/${id}`, {
           method: 'DELETE',
         });
         if (!response.ok) throw new Error('Falha ao excluir o atendimento.');

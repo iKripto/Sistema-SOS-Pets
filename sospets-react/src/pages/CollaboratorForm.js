@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Home } from 'react-feather';
 // Reutilizando o CSS do formulário de Pets
-import './PetForm.css'; // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/sospets-react/src/pages/PetForm.css]
+import './PetForm.css';
+
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+ // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/sospets-react/src/pages/PetForm.css]
 
 const CollaboratorForm = () => {
   const { cpf } = useParams(); // O ID do colaborador é o CPF
@@ -28,7 +32,7 @@ const CollaboratorForm = () => {
       setLoading(true);
       const fetchCollaborator = async () => {
         try {
-          const response = await fetch(`http://localhost:8080/funcionarios/${cpf}`);
+          const response = await fetch(`${API_BASE_URL}/funcionarios/${cpf}`);
           if (!response.ok) {
             throw new Error('Colaborador não encontrado.');
           }
@@ -59,8 +63,8 @@ const CollaboratorForm = () => {
     setError('');
 
     const url = isEditing 
-      ? `http://localhost:8080/funcionarios/${cpf}` // PUT [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/FuncionarioController.java]
-      : 'http://localhost:8080/funcionarios';      // POST [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/FuncionarioController.java]
+      ? `${API_BASE_URL}/funcionarios/${cpf}` // PUT [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/FuncionarioController.java]
+      : `${API_BASE_URL}/funcionarios`;      // POST [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/FuncionarioController.java]
       
     const method = isEditing ? 'PUT' : 'POST';
 

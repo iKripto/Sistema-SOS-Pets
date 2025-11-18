@@ -3,6 +3,10 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Home } from 'react-feather';
 import './AtendimentoForm.css';
 
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+
+
 const AtendimentoForm = () => {
   const { id } = useParams();
   const isEditing = Boolean(id);
@@ -32,10 +36,10 @@ const AtendimentoForm = () => {
     const fetchData = async () => {
       try {
         const [animaisRes, tutoresRes, servidoresRes, clinicasRes] = await Promise.all([
-          fetch('http://localhost:8080/animais'),
-          fetch('http://localhost:8080/tutores'),
-          fetch('http://localhost:8080/funcionarios'),
-          fetch('http://localhost:8080/clinicas')
+          fetch(`${API_BASE_URL}/animais`),
+          fetch(`${API_BASE_URL}/tutores`),
+          fetch(`${API_BASE_URL}/funcionarios`),
+          fetch(`${API_BASE_URL}/clinicas`)
         ]);
 
         setAnimais(await animaisRes.json());
@@ -44,7 +48,7 @@ const AtendimentoForm = () => {
         setClinicas(await clinicasRes.json());
 
         if (isEditing) {
-          const atRes = await fetch(`http://localhost:8080/atendimentos/${id}`);
+          const atRes = await fetch(`${API_BASE_URL}/atendimentos/${id}`);
           if (!atRes.ok) throw new Error('Atendimento não encontrado.');
           const data = await atRes.json();
           setFormData({
@@ -88,8 +92,8 @@ const AtendimentoForm = () => {
     };
 
     const url = isEditing
-      ? `http://localhost:8080/atendimentos/${id}`
-      : 'http://localhost:8080/atendimentos';
+      ? `${API_BASE_URL}/atendimentos/${id}`
+      : `${API_BASE_URL}/atendimentos`;
     const method = isEditing ? 'PUT' : 'POST';
 
     try {

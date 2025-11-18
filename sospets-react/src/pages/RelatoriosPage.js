@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./RelatoriosPage.css";
 
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+
+
 const RelatoriosPage = () => {
   const [tipo, setTipo] = useState("atendimentos");
   const [dados, setDados] = useState([]);
@@ -16,7 +20,7 @@ const RelatoriosPage = () => {
     try {
       setLoading(true);
       setErro(null);
-      let url = `http://localhost:8080/${tipo}`;
+      let url = `${API_BASE_URL}/${tipo}`;
 
       const params = [];
       if (dataInicio) params.push(`inicio=${dataInicio}`);

@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 // 1. Importar ícones
 import { Home, Plus, Trash2, Edit2 } from 'react-feather';
 // 2. Reutilizar o CSS de PetPage
-import './PetPage.css'; // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/sospets-react/src/pages/PetPage.css]
+import './PetPage.css';
+
+// Configuração da URL da API
+const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+ // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/sospets-react/src/pages/PetPage.css]
 
 const ClinicPage = () => {
   const [clinicas, setClinicas] = useState([]);
@@ -15,7 +19,7 @@ const ClinicPage = () => {
       setLoading(true);
       try {
         // 3. Buscar dados do endpoint de Clínicas
-        const response = await fetch('http://localhost:8080/clinicas'); // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/ClinicaController.java]
+        const response = await fetch(`${API_BASE_URL}/clinicas`); // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/ClinicaController.java]
         if (!response.ok) {
           throw new Error('Falha ao buscar dados das clínicas.');
         }
@@ -37,7 +41,7 @@ const ClinicPage = () => {
     if (window.confirm("Tem certeza que deseja excluir este item?")) {
       setError(null);
       try {
-        const response = await fetch(`http://localhost:8080/clinicas/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/clinicas/${id}`, {
           method: 'DELETE',
         }); // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/backend/src/main/java/com/example/sospets/controllers/ClinicaController.java]
 
