@@ -6,7 +6,7 @@ import { Home, Plus, Trash2, Edit2 } from 'react-feather';
 import './PetPage.css';
 
 // Configuração da URL da API
-const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
  // [cite: ikripto/fullstacksospets/FullStackSosPets-0fc15d1f65c4ace1f0be6beed39894125100c702/sospets-react/src/pages/PetPage.css]
 
 const ClinicPage = () => {

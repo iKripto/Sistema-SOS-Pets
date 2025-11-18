@@ -5,7 +5,7 @@ import { Home } from 'react-feather';
 import './PetForm.css';
 
 // Configuração da URL da API
-const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
  // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/sospets-react/src/pages/PetForm.css]
 
 const PetForm = () => {

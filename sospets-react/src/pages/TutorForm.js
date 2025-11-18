@@ -5,7 +5,7 @@ import { Home } from 'react-feather';
 import './PetForm.css';
 
 // Configuração da URL da API
-const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
  //
 
 const TutorForm = () => {

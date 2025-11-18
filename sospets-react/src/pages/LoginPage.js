@@ -13,7 +13,7 @@ const LoginPage = ({ onLoginSuccess }) => {
     // O servidor Spring Boot roda na porta 8080 por padrão.
     // O controller é "/funcionarios"
     // O endpoint de busca é "/{cpf}"
-    const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
     const API_URL = `${API_BASE_URL}/funcionarios/${username}`;
     try {
       const response = await fetch(API_URL);

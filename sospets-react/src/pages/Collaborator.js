@@ -5,7 +5,7 @@ import { Home, Plus, Trash2, Edit2 } from 'react-feather';
 import './PetPage.css';
 
 // Configuração da URL da API
-const API_BASE_URL = process.env.REACT_APP_API_URL || `${API_BASE_URL}`;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
  // [cite: ikripto/fullstacksospets/FullStackSosPets-377f8109a3631bb635d066f623b4f36508380df4/sospets-react/src/pages/PetPage.css]
 
 const CollaboratorPage = () => {
