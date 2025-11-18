@@ -7,6 +7,7 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.CascadeType;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class Funcionario {
     private String profissao;
     private String endereco;
 
-    @OneToMany(mappedBy = "funcionario")
+    @OneToMany(mappedBy = "funcionario", cascade = CascadeType.REMOVE) 
     @JsonIgnore
     private List<Atendimento> atendimentos;
 }
