@@ -84,12 +84,17 @@ const AtendimentoForm = () => {
       dataGeracao: formData.dataGeracao,
       animal: { id: parseInt(formData.animalId) },
       tutor: formData.tutorCpf ? { cpf: formData.tutorCpf } : null,
-      servidor: { cpf: formData.servidorCpf },
+      
+      // --- CORREÇÃO AQUI ---
+      // Mudamos de 'servidor' para 'funcionario' para bater com a Entidade Java
+      funcionario: { cpf: formData.servidorCpf }, 
+      
       clinica: formData.clinicaId ? { id: parseInt(formData.clinicaId) } : null,
       statusClinica: formData.statusClinica,
       dataEstimada: formData.dataEstimada || null,
       historico: formData.historico
     };
+    
 
     const url = isEditing
       ? `${API_BASE_URL}/atendimentos/${id}`

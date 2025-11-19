@@ -3,16 +3,17 @@ package com.example.sospets.services.impl;
 // Imports do DTO e utilitários
 import com.example.sospets.controllers.dto.RelatorioDTO;
 import java.util.Map;
-import java.math.BigDecimal; // Pode ser necessário para a conversão do SQL
 
 import com.example.sospets.entities.Animal;
 import com.example.sospets.entities.Atendimento;
 import com.example.sospets.entities.Clinica;
 import com.example.sospets.entities.Funcionario;
+import com.example.sospets.entities.Tutor; // [NOVO IMPORT]
 import com.example.sospets.repositories.AnimalRepo;
 import com.example.sospets.repositories.AtendimentoRepo;
 import com.example.sospets.repositories.ClinicaRepo;
 import com.example.sospets.repositories.FuncionarioRepo;
+import com.example.sospets.repositories.TutorRepo; // [NOVO IMPORT]
 import com.example.sospets.services.AtendimentoService;
 import com.example.sospets.services.exceptions.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -36,23 +37,52 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 
     @Autowired
     private FuncionarioRepo funcionarioRepo;
+    
+    @Autowired
+    private TutorRepo tutorRepo; // [INJEÇÃO NOVA]
 
     @Autowired
     private ModelMapper mapper;
 
     @Override
     public Atendimento create(Atendimento atendimento) {
+        // 1. BUSCA OBRIGATÓRIA DE ANIMAL
+        if (atendimento.getAnimal() == null || atendimento.getAnimal().getId() == 0) {
+            throw new RuntimeException("Dados do animal são obrigatórios.");
+        }
         Animal animal = animalRepo.findById(atendimento.getAnimal().getId())
                 .orElseThrow(()-> new ObjectNotFoundException("Animal não encontrado"));
         atendimento.setAnimal(animal);
 
-        Clinica clinica = clinicaRepo.findById(atendimento.getClinica().getId())
-                .orElseThrow(() -> new ObjectNotFoundException("Clínica não encontrada"));
-        atendimento.setClinica(clinica);
+        // 2. BUSCA OPCIONAL DE CLÍNICA (Correção do Erro de Consulta)
+        // Verifica se existe o objeto clinica E se o ID é válido (diferente de 0 ou null)
+        if (atendimento.getClinica() != null && atendimento.getClinica().getId() != 0) {
+            Clinica clinica = clinicaRepo.findById(atendimento.getClinica().getId())
+                    .orElseThrow(() -> new ObjectNotFoundException("Clínica informada não encontrada"));
+            atendimento.setClinica(clinica);
+        } else {
+            // Se não vier clínica, define explicitamente como null para não dar erro ao salvar
+            atendimento.setClinica(null);
+        }
 
+        // 3. BUSCA OBRIGATÓRIA DE FUNCIONÁRIO
+        if (atendimento.getFuncionario() == null || atendimento.getFuncionario().getCpf() == null) {
+            throw new RuntimeException("Funcionário responsável é obrigatório.");
+        }
         Funcionario funcionario = funcionarioRepo.findByCpf(atendimento.getFuncionario().getCpf())
                 .orElseThrow(()-> new RuntimeException("Funcionário não encontrado"));
         atendimento.setFuncionario(funcionario);
+
+        // 4. BUSCA OPCIONAL DE TUTOR (Novo bloco)
+        // O Frontend envia o CPF do tutor se ele existir
+        if (atendimento.getTutor() != null && atendimento.getTutor().getCpf() != null && !atendimento.getTutor().getCpf().isEmpty()) {
+             Tutor tutor = tutorRepo.findById(atendimento.getTutor().getCpf())
+                    .orElseThrow(() -> new ObjectNotFoundException("Tutor informado não encontrado"));
+             atendimento.setTutor(tutor);
+        } else {
+             atendimento.setTutor(null);
+        }
+
         return repository.save(mapper.map(atendimento, Atendimento.class));
     }
 
@@ -68,6 +98,8 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 
     @Override
     public Atendimento update(Atendimento atendimento) {
+        // É boa prática garantir que os relacionamentos existam no update também, 
+        // mas o save do repositório lida com isso se os IDs estiverem corretos.
         return repository.save(mapper.map(atendimento, Atendimento.class));
     }
 
@@ -77,21 +109,17 @@ public class AtendimentoServiceImpl implements AtendimentoService {
         repository.deleteById(id);
     }
 
-    // --- MÉTODO ADICIONADO PARA O RELATÓRIO ---
+    // --- MÉTODO DO RELATÓRIO ---
     
-    /**
-     * Busca os dados agregados para o relatório de atendimentos.
-     * @return um DTO com o total de atendimentos e o valor total.
-     */
     @Override
     public RelatorioDTO getRelatorioMes() {
-        // Chama o novo método do repositório
         Map<String, Object> resultado = repository.getRelatorioMes();
 
-        // Converte os resultados da query nativa para os tipos corretos (Long e Double)
-        Long totalAtendimentos = ((Number) resultado.get("totalAtendimentos")).longValue();
+        Long totalAtendimentos = 0L;
+        if (resultado.get("totalAtendimentos") != null) {
+             totalAtendimentos = ((Number) resultado.get("totalAtendimentos")).longValue();
+        }
         
-        // Tratamento para o caso de não haver atendimentos (SUM pode retornar null)
         Double valorTotal = 0.0;
         if (resultado.get("valorTotal") != null) {
             valorTotal = ((Number) resultado.get("valorTotal")).doubleValue();
