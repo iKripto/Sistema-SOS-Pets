@@ -9,6 +9,7 @@ import com.example.sospets.repositories.CorRepo;
 import com.example.sospets.repositories.TutorRepo;
 import com.example.sospets.services.AnimalService;
 import com.example.sospets.services.exceptions.ObjectNotFoundException;
+import com.example.sospets.validations.Validacoes;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,8 +49,20 @@ public class AnimalServiceImpl implements AnimalService {
         }
     }
 
+    private void validarAnimal(Animal animal) {
+        // Nome do animal — apenas letras
+        if (animal.getNome() == null || !Validacoes.apenasLetras(animal.getNome())) {
+            throw new IllegalArgumentException("Apenas letras.");
+        }
+        // Raca do animal — apenas letras
+        if (animal.getRaca() == null || !Validacoes.apenasLetras(animal.getRaca())) {
+            throw new IllegalArgumentException("Apenas letras.");
+        }
+    }
+
     @Override
     public Animal create(Animal animal) {
+        validarAnimal(animal);
         setData(animal); // Chama a lógica auxiliar
         return repository.save(mapper.map(animal, Animal.class));
     }
@@ -81,7 +94,8 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal update(Animal animal) {
-        findById(animal.getId()); // Garante que o animal existe
+        findById(animal.getId());// Garante que o animal existe
+        validarAnimal(animal);
         setData(animal); // Chama a mesma lógica auxiliar do create
         return repository.save(mapper.map(animal, Animal.class));
     }

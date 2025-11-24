@@ -4,6 +4,7 @@ import com.example.sospets.entities.Funcionario;
 import com.example.sospets.repositories.FuncionarioRepo;
 import com.example.sospets.services.FuncionarioService;
 import com.example.sospets.services.exceptions.ObjectNotFoundException;
+import com.example.sospets.validations.Validacoes;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,26 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Autowired
     private ModelMapper mapper;
 
+    private void validarFuncionario(Funcionario funcionario) {
+        if (funcionario.getCpf() == null || !Validacoes.isValidCPF(funcionario.getCpf())) {
+            throw new IllegalArgumentException("CPF inválido!");
+        }
+        if (funcionario.getNome() == null || !Validacoes.apenasLetras(funcionario.getNome())) {
+            throw new IllegalArgumentException("Apenas letras.");
+        }
+
+        if (funcionario.getEmail() == null || !Validacoes.validarEmail(funcionario.getEmail())) {
+            throw new IllegalArgumentException("Email inválido!");
+        }
+
+        if (funcionario.getProfissao() == null || !Validacoes.apenasLetras(funcionario.getProfissao())) {
+            throw new IllegalArgumentException("Apenas letras.");
+        }
+    }
+
     @Override
     public Funcionario create(Funcionario funcionario) {
+        validarFuncionario(funcionario);
         return repository.save(mapper.map(funcionario, Funcionario.class));
     }
 
@@ -43,6 +62,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Override
     public Funcionario update(Funcionario funcionario) {
+        validarFuncionario(funcionario);
         return repository.save(mapper.map(funcionario, Funcionario.class));
     }
 

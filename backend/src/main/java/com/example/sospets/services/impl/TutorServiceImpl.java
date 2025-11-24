@@ -4,6 +4,7 @@ import com.example.sospets.entities.Tutor;
 import com.example.sospets.repositories.TutorRepo;
 import com.example.sospets.services.TutorService;
 import com.example.sospets.services.exceptions.ObjectNotFoundException;
+import com.example.sospets.validations.Validacoes;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,23 @@ public class TutorServiceImpl implements TutorService {
 
     @Autowired
     private ModelMapper mapper;
+
+    private void validarTutor(Tutor tutor) {
+        if (tutor.getCpf() == null || !Validacoes.isValidCPF(tutor.getCpf())) {
+            throw new IllegalArgumentException("CPF inválido!");
+        }
+        if (tutor.getNome() == null || !Validacoes.apenasLetras(tutor.getNome())) {
+            throw new IllegalArgumentException("Apenas letras.");
+        }
+
+        if (tutor.getTelefone() == null || !Validacoes.validarTelefone(tutor.getTelefone())) {
+            throw new IllegalArgumentException("Telefone inválido!");
+        }
+
+        if (tutor.getProfissao() == null || !Validacoes.apenasLetras(tutor.getProfissao())) {
+            throw new IllegalArgumentException("Apenas letras.");
+        }
+    }
 
     @Override
     public Tutor create(Tutor tutor) {
