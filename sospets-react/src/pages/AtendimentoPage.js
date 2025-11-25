@@ -68,7 +68,7 @@ const AtendimentoPage = () => {
               <th>Data Geração</th>
               <th>Animal</th>
               <th>Tutor</th>
-              <th>Servidor</th>
+              <th>funcionario</th>
               <th>Clínica / Status</th>
               <th>Data Estimada</th>
               <th>Ações</th>
@@ -82,7 +82,7 @@ const AtendimentoPage = () => {
                 <td>{new Date(a.dataGeracao).toLocaleDateString('pt-BR')}</td>
                 <td>{a.animal?.nome || 'N/A'}</td>
                 <td>{a.tutor?.nome || 'Sem tutor'}</td>
-                <td>{a.servidor?.nome || 'N/A'}</td>
+                <td>{a.funcionario?.nome || 'N/A'}</td>
                 <td>{a.clinica ? a.clinica.nome : a.statusClinica || '—'}</td>
                 <td>{a.dataEstimada ? new Date(a.dataEstimada).toLocaleDateString('pt-BR') : '—'}</td>
 
