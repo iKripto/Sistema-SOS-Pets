@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./RelatoriosPage.css";
 
-// Configuração da URL da API
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-
+// URL base da API
+const API_BASE_URL = 'http://localhost:8080';
 
 const RelatoriosPage = () => {
-  const [tipo, setTipo] = useState("atendimentos");
+  // CORREÇÃO 1: Os valores iniciais agora correspondem aos endpoints da API
+  const [tipo, setTipo] = useState("atendimentos"); 
   const [dados, setDados] = useState([]);
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
@@ -20,21 +20,25 @@ const RelatoriosPage = () => {
     try {
       setLoading(true);
       setErro(null);
+      
+      // A URL é construída diretamente com o 'tipo', que agora bate com o Backend
       let url = `${API_BASE_URL}/${tipo}`;
 
+      // Nota: O backend atual não implementa filtro de data nativamente no findAll, 
+      // então esses parâmetros podem ser ignorados pelo servidor, mas mantemos aqui para futura implementação.
       const params = [];
       if (dataInicio) params.push(`inicio=${dataInicio}`);
       if (dataFim) params.push(`fim=${dataFim}`);
       if (params.length) url += `?${params.join("&")}`;
 
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Erro ao carregar dados");
+      if (!res.ok) throw new Error("Erro ao carregar dados. Verifique se o servidor está rodando.");
 
       const json = await res.json();
       setDados(json);
     } catch (error) {
       console.error("Erro:", error);
-      setErro("Falha ao carregar dados");
+      setErro("Falha ao carregar dados: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -43,13 +47,15 @@ const RelatoriosPage = () => {
   useEffect(() => {
     carregarDados();
     // eslint-disable-next-line
-  }, [tipo]);
+  }, [tipo]); // Recarrega sempre que o tipo mudar
 
   // 🔍 Filtragem local (nome, tipo, tutor etc.)
   const filtrarBusca = (item) => {
+    if (!busca) return true;
     const termo = busca.toLowerCase();
+    
     switch (tipo) {
-      case "pets":
+      case "animais": // Antes era "pets"
         return (
           item.nome?.toLowerCase().includes(termo) ||
           item.tutor?.nome?.toLowerCase().includes(termo)
@@ -58,15 +64,16 @@ const RelatoriosPage = () => {
         return item.nome?.toLowerCase().includes(termo);
       case "clinicas":
         return item.nome?.toLowerCase().includes(termo);
-      case "colaboradores":
+      case "funcionarios": // Antes era "colaboradores"
         return item.nome?.toLowerCase().includes(termo);
       case "atendimentos":
         return (
-          item.pet?.nome?.toLowerCase().includes(termo) ||
+          // CORREÇÃO 2: Ajuste dos nomes das propriedades para bater com o Java
+          item.animal?.nome?.toLowerCase().includes(termo) ||
           item.tutor?.nome?.toLowerCase().includes(termo) ||
-          item.colaborador?.nome?.toLowerCase().includes(termo) ||
+          item.funcionario?.nome?.toLowerCase().includes(termo) ||
           item.clinica?.nome?.toLowerCase().includes(termo) ||
-          item.tipoAtendimento?.toLowerCase().includes(termo)
+          item.tipo?.toLowerCase().includes(termo)
         );
       default:
         return true;
@@ -85,12 +92,13 @@ const RelatoriosPage = () => {
       <div className="relatorios-filtros">
         <div className="filtro">
           <label>Tipo de relatório:</label>
+          {/* CORREÇÃO 3: Values atualizados para os endpoints corretos */}
           <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
-            <option value="pets">Animais</option>
-            <option value="tutores">Tutores</option>
-            <option value="clinicas">Clínicas</option>
-            <option value="colaboradores">Colaboradores</option>
             <option value="atendimentos">Atendimentos</option>
+            <option value="animais">Animais</option> {/* Endpoint /animais */}
+            <option value="tutores">Tutores</option> {/* Endpoint /tutores */}
+            <option value="clinicas">Clínicas</option> {/* Endpoint /clinicas */}
+            <option value="funcionarios">Colaboradores</option> {/* Endpoint /funcionarios */}
           </select>
         </div>
 
@@ -123,7 +131,7 @@ const RelatoriosPage = () => {
         </div>
 
         <button onClick={carregarDados} className="btn-filtrar">
-          Gerar
+          Atualizar
         </button>
       </div>
 
@@ -136,7 +144,7 @@ const RelatoriosPage = () => {
           <table>
             <thead>
               <tr>
-                {tipo === "pets" && (
+                {tipo === "animais" && (
                   <>
                     <th>Nome</th>
                     <th>Espécie</th>
@@ -155,14 +163,14 @@ const RelatoriosPage = () => {
                   <>
                     <th>Nome</th>
                     <th>Endereço</th>
-                    <th>Cidade</th>
+                    <th>Telefone</th>
                   </>
                 )}
-                {tipo === "colaboradores" && (
+                {tipo === "funcionarios" && (
                   <>
                     <th>Nome</th>
                     <th>CPF</th>
-                    <th>Cargo</th>
+                    <th>Profissão</th> {/* Ajustado label */}
                   </>
                 )}
                 {tipo === "atendimentos" && (
@@ -182,12 +190,12 @@ const RelatoriosPage = () => {
             <tbody>
               {dados.filter(filtrarBusca).map((item) => (
                 <tr key={item.id || item.cpf}>
-                  {tipo === "pets" && (
+                  {tipo === "animais" && (
                     <>
                       <td>{item.nome}</td>
                       <td>{item.especie}</td>
                       <td>{item.raca}</td>
-                      <td>{item.tutor?.nome}</td>
+                      <td>{item.tutor?.nome || 'Sem tutor'}</td>
                     </>
                   )}
                   {tipo === "tutores" && (
@@ -200,25 +208,27 @@ const RelatoriosPage = () => {
                   {tipo === "clinicas" && (
                     <>
                       <td>{item.nome}</td>
-                      <td>{item.endereco}</td>
-                      <td>{item.cidade}</td>
+                      <td>{item.endereco || item.enderco}</td> {/* Backend tem typo 'enderco' na entidade Clinica */}
+                      <td>{item.telefone}</td>
                     </>
                   )}
-                  {tipo === "colaboradores" && (
+                  {tipo === "funcionarios" && (
                     <>
                       <td>{item.nome}</td>
                       <td>{item.cpf}</td>
-                      <td>{item.cargo}</td>
+                      {/* CORREÇÃO 4: Campo correto é profissao */}
+                      <td>{item.profissao}</td> 
                     </>
                   )}
                   {tipo === "atendimentos" && (
                     <>
-                      <td>{item.data}</td>
-                      <td>{item.pet?.nome}</td>
-                      <td>{item.tutor?.nome}</td>
-                      <td>{item.colaborador?.nome}</td>
-                      <td>{item.clinica?.nome}</td>
-                      <td>{item.tipoAtendimento}</td>
+                      {/* CORREÇÃO 5: Campos corretos do Atendimento */}
+                      <td>{item.dataGeracao ? new Date(item.dataGeracao).toLocaleDateString('pt-BR') : '-'}</td>
+                      <td>{item.animal?.nome || 'N/A'}</td>
+                      <td>{item.tutor?.nome || 'N/A'}</td>
+                      <td>{item.funcionario?.nome || 'N/A'}</td>
+                      <td>{item.clinica?.nome || item.statusClinica}</td>
+                      <td>{item.tipo}</td>
                       <td>{item.historico}</td>
                     </>
                   )}
