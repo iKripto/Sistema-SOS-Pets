@@ -4,7 +4,7 @@ import { Home, Plus, Trash2, Edit2 } from 'react-feather';
 import './AtendimentoPage.css';
 
 // Recomendo usar a mesma constante de URL que usamos no Form para facilitar mudanças futuras
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 const AtendimentoPage = () => {
   const [atendimentos, setAtendimentos] = useState([]);
