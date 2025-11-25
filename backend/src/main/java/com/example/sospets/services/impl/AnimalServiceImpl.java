@@ -62,9 +62,8 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal create(Animal animal) {
-        validarAnimal(animal);
-        setData(animal); // Chama a lógica auxiliar
-        return repository.save(mapper.map(animal, Animal.class));
+        setData(animal);
+        return repository.save(animal); // Correto: Salva o objeto que já tem o tutor configurado
     }
 
     public List<Animal> findAll() {
@@ -94,10 +93,9 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal update(Animal animal) {
-        findById(animal.getId());// Garante que o animal existe
-        validarAnimal(animal);
-        setData(animal); // Chama a mesma lógica auxiliar do create
-        return repository.save(mapper.map(animal, Animal.class));
+        findById(animal.getId());
+        setData(animal);
+        return repository.save(animal); // Remova o mapper.map aqui também
     }
 
     public void delete(Integer id){

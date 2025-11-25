@@ -32,7 +32,6 @@ public class Animal {
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "tutor_id")
-    @JsonIgnore
     private Tutor tutor;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
