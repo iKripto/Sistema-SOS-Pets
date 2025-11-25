@@ -6,6 +6,7 @@ import './AtendimentoForm.css';
 // Configuração da URL da API
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
+
 const AtendimentoForm = () => {
   const { id } = useParams();
   const isEditing = Boolean(id);
@@ -55,7 +56,7 @@ const AtendimentoForm = () => {
             dataGeracao: new Date(data.dataGeracao).toISOString().split('T')[0],
             animalId: String(data.animal.id),
             tutorCpf: data.tutor?.cpf || '',
-            servidorCpf: data.funcionario?.cpf || data.servidor?.cpf || '', // Tenta pegar de funcionario (novo) ou servidor (antigo)
+            servidorCpf: data.servidor?.cpf || '',
             clinicaId: data.clinica ? String(data.clinica.id) : '',
             statusClinica: data.statusClinica || 'aguardando',
             dataEstimada: data.dataEstimada ? new Date(data.dataEstimada).toISOString().split('T')[0] : '',
@@ -84,7 +85,8 @@ const AtendimentoForm = () => {
       animal: { id: parseInt(formData.animalId) },
       tutor: formData.tutorCpf ? { cpf: formData.tutorCpf } : null,
       
-      // CORREÇÃO: Envia 'funcionario' para corresponder à entidade Java do backend
+      // --- CORREÇÃO AQUI ---
+      // Mudamos de 'servidor' para 'funcionario' para bater com a Entidade Java
       funcionario: { cpf: formData.servidorCpf }, 
       
       clinica: formData.clinicaId ? { id: parseInt(formData.clinicaId) } : null,
@@ -92,6 +94,7 @@ const AtendimentoForm = () => {
       dataEstimada: formData.dataEstimada || null,
       historico: formData.historico
     };
+    
 
     const url = isEditing
       ? `${API_BASE_URL}/atendimentos/${id}`
@@ -169,24 +172,24 @@ const AtendimentoForm = () => {
           </select>
         </div>
 
-        {/* CORREÇÃO: Mantém apenas o campo Clínica dentro da condição */}
         {(formData.tipo === 'castracao' || formData.tipo === 'tratamento') && (
-          <div className="form-group">
-            <label htmlFor="clinicaId">Clínica</label>
-            <select id="clinicaId" name="clinicaId" value={formData.clinicaId} onChange={handleChange}>
-              <option value="">Aguardando clínica</option>
-              {clinicas.map(c => (
-                <option key={c.id} value={c.id}>{c.nome}</option>
-              ))}
-            </select>
-          </div>
-        )}
+          <>
+            <div className="form-group">
+              <label htmlFor="clinicaId">Clínica</label>
+              <select id="clinicaId" name="clinicaId" value={formData.clinicaId} onChange={handleChange}>
+                <option value="">Aguardando clínica</option>
+                {clinicas.map(c => (
+                  <option key={c.id} value={c.id}>{c.nome}</option>
+                ))}
+              </select>
+            </div>
 
-        {/* CORREÇÃO: Data Estimada movida para fora da condição para aparecer sempre */}
-        <div className="form-group">
-          <label htmlFor="dataEstimada">Data Estimada</label>
-          <input type="date" id="dataEstimada" name="dataEstimada" value={formData.dataEstimada} onChange={handleChange} />
-        </div>
+            <div className="form-group">
+              <label htmlFor="dataEstimada">Data Estimada</label>
+              <input type="date" id="dataEstimada" name="dataEstimada" value={formData.dataEstimada} onChange={handleChange} />
+            </div>
+          </>
+        )}
 
         <div className="form-group" style={{ gridColumn: '1 / -1' }}>
           <label htmlFor="historico">Histórico e Observações</label>

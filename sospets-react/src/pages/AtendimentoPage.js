@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { Home, Plus, Trash2, Edit2 } from 'react-feather';
 import './AtendimentoPage.css';
 
-// Configuração da URL da API
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-
+// Recomendo usar a mesma constante de URL que usamos no Form para facilitar mudanças futuras
+const API_BASE_URL = 'http://localhost:8080';
 
 const AtendimentoPage = () => {
   const [atendimentos, setAtendimentos] = useState([]);
@@ -68,7 +67,7 @@ const AtendimentoPage = () => {
               <th>Data Geração</th>
               <th>Animal</th>
               <th>Tutor</th>
-              <th>funcionario</th>
+              <th>Servidor</th>
               <th>Clínica / Status</th>
               <th>Data Estimada</th>
               <th>Ações</th>
@@ -82,7 +81,11 @@ const AtendimentoPage = () => {
                 <td>{new Date(a.dataGeracao).toLocaleDateString('pt-BR')}</td>
                 <td>{a.animal?.nome || 'N/A'}</td>
                 <td>{a.tutor?.nome || 'Sem tutor'}</td>
+                
+                {/* --- CORREÇÃO AQUI --- */}
+                {/* Alterado de a.servidor?.nome para a.funcionario?.nome */}
                 <td>{a.funcionario?.nome || 'N/A'}</td>
+
                 <td>{a.clinica ? a.clinica.nome : a.statusClinica || '—'}</td>
                 <td>{a.dataEstimada ? new Date(a.dataEstimada).toLocaleDateString('pt-BR') : '—'}</td>
 
