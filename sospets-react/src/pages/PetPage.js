@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Home, Plus, Trash2, Edit2 } from 'react-feather'; 
 import './PetPage.css';
 
-// Configuração da URL da API
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 const PetPage = () => {
@@ -11,8 +10,26 @@ const PetPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const sexoMap = { 0: 'Fêmea', 1: 'Macho' };
-  const especieMap = { 0: 'Cachorro', 1: 'Gato' };
+  // --- CORREÇÃO AQUI ---
+  // Mapa expandido para aceitar tanto 0/1 (banco antigo) quanto FEMEA/MACHO (padrão Java)
+  const sexoMap = { 
+    0: 'Fêmea', 
+    1: 'Macho',
+    'FEMEA': 'Fêmea',
+    'MACHO': 'Macho',
+    'Fêmea': 'Fêmea',
+    'Macho': 'Macho'
+  };
+
+  const especieMap = { 
+    0: 'Cachorro', 
+    1: 'Gato',
+    'CACHORRO': 'Cachorro',
+    'GATO': 'Gato',
+    'Cachorro': 'Cachorro',
+    'Gato': 'Gato'
+  };
+  // ---------------------
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -50,7 +67,6 @@ const PetPage = () => {
     }
   };
 
-
   if (loading) return <div>Carregando...</div>;
 
   return (
@@ -77,7 +93,7 @@ const PetPage = () => {
               <th>COR</th>
               <th>FILHOTE</th>
               <th>SEXO</th>
-              <th>CASTRADO</th> {/* NOVA COLUNA */}
+              <th>CASTRADO</th>
               <th>DATA DE NASCIMENTO</th>
               <th>TUTOR</th>
               <th>AÇÕES</th>
@@ -88,14 +104,17 @@ const PetPage = () => {
               <tr key={pet.id}>
                 <td>PET-{String(pet.id).padStart(3, '0')}</td>
                 <td>{pet.nome}</td>
-                <td>{especieMap[pet.especie]}</td>
+                
+                {/* Usa a função de fallback || para garantir que algo apareça */}
+                <td>{especieMap[pet.especie] || pet.especie}</td>
+                
                 <td>{pet.cor ? pet.cor.descricao : 'N/A'}</td> 
                 <td>{pet.eFilhote ? 'Sim' : 'Não'}</td>
-                <td>{sexoMap[pet.sexo]}</td>
                 
-                {/* EXIBIÇÃO DO CAMPO CASTRADO */}
+                {/* Usa a função de fallback || para garantir que algo apareça */}
+                <td>{sexoMap[pet.sexo] || pet.sexo}</td>
+                
                 <td>{pet.castrado ? 'Sim' : 'Não'}</td>
-                
                 <td>{new Date(pet.dataNascimento).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</td>
                 <td>{pet.tutor ? pet.tutor.nome : 'Sem tutor'}</td>
                 
