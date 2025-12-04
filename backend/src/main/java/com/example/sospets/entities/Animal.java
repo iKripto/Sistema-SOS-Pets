@@ -29,6 +29,10 @@ public class Animal {
     private Especie especie;
     private Sexo sexo;
     private boolean statusAcolhimento;
+    
+    // --- NOVO CAMPO ---
+    private boolean castrado; 
+    // ------------------
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "tutor_id")
