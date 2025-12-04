@@ -1,19 +1,17 @@
-// 1. Importar 'useParams' para ler o ID da URL
+// Arquivo: sospets-react/src/pages/PetForm.js
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Home } from 'react-feather';
 import './PetForm.css';
 
-// Configuração da URL da API
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
- // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/sospets-react/src/pages/PetForm.css]
 
 const PetForm = () => {
-  // 2. Obter o 'id' da URL. Será 'undefined' se for a rota /pets/novo
   const { id } = useParams();
-  const isEditing = Boolean(id); // True se 'id' existir
+  const isEditing = Boolean(id);
 
-  // 3. Unificar o estado do formulário em um objeto
+  // 1. Adicionado 'castrado' ao estado inicial
   const [formData, setFormData] = useState({
     nome: '',
     raca: '',
@@ -23,25 +21,23 @@ const PetForm = () => {
     especie: '0',
     sexo: '0',
     statusAcolhimento: true,
+    castrado: false, // <--- NOVO CAMPO
     corId: '',
     tutorCpf: ''
   });
 
-  // Estados de controle
   const [cores, setCores] = useState([]);
   const [tutores, setTutores] = useState([]);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true); // Inicia true para carregar dados
+  const [loading, setLoading] = useState(true);
   
   const navigate = useNavigate();
 
-  // 4. useEffect modificado para buscar dados
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError('');
       try {
-        // Sempre buscar Cores e Tutores
         const [coresRes, tutoresRes] = await Promise.all([
           fetch(`${API_BASE_URL}/cor`),
           fetch(`${API_BASE_URL}/tutores`)
@@ -53,24 +49,22 @@ const PetForm = () => {
         setCores(coresData);
         setTutores(tutoresData);
 
-        // Se estiver editando (isEditing === true), buscar dados do animal
         if (isEditing) {
           const animalRes = await fetch(`${API_BASE_URL}/animais/${id}`);
           if (!animalRes.ok) throw new Error('Animal não encontrado.');
           
           const animal = await animalRes.json();
           
-          // Preenche o formulário com os dados do animal
           setFormData({
             nome: animal.nome,
             raca: animal.raca || '',
             porte: String(animal.porte),
-            // Formata a data para YYYY-MM-DD
             dataNascimento: new Date(animal.dataNascimento).toISOString().split('T')[0],
             eFilhote: animal.eFilhote,
             especie: String(animal.especie),
             sexo: String(animal.sexo),
             statusAcolhimento: animal.statusAcolhimento,
+            castrado: animal.castrado || false, // <--- CARREGA O VALOR DO BACKEND
             corId: String(animal.cor.id),
             tutorCpf: animal.tutor ? animal.tutor.cpf : ''
           });
@@ -78,13 +72,12 @@ const PetForm = () => {
       } catch (err) {
         setError('Falha ao carregar dados: ' + err.message);
       } finally {
-        setLoading(false); // Terminou de carregar
+        setLoading(false);
       }
     };
     fetchData();
-  }, [id, isEditing]); // Depende do 'id' da URL
+  }, [id, isEditing]);
 
-  // 5. Função única para lidar com todas as mudanças
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prevData => ({
@@ -93,12 +86,10 @@ const PetForm = () => {
     }));
   };
 
-  // 6. handleSubmit modificado para fazer POST (Criar) ou PUT (Editar)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Monta o objeto para a API
     const animalData = {
       nome: formData.nome,
       raca: formData.raca,
@@ -108,18 +99,17 @@ const PetForm = () => {
       especie: parseInt(formData.especie, 10),
       sexo: parseInt(formData.sexo, 10),
       statusAcolhimento: formData.statusAcolhimento,
+      castrado: formData.castrado, // <--- ENVIA O VALOR PARA O BACKEND
       cor: { id: parseInt(formData.corId, 10) },
       tutor: formData.tutorCpf ? { cpf: formData.tutorCpf } : null
     };
     
-    // Define a URL e o Método corretos
     const url = isEditing 
-      ? `${API_BASE_URL}/animais/${id}` // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/backend/src/main/java/com/example/sospets/controllers/AnimalController.java]
+      ? `${API_BASE_URL}/animais/${id}`
       : `${API_BASE_URL}/animais`;
       
     const method = isEditing ? 'PUT' : 'POST';
 
-    // Adiciona o ID no corpo se for PUT
     if (isEditing) {
       animalData.id = parseInt(id, 10);
     }
@@ -136,7 +126,7 @@ const PetForm = () => {
         throw new Error(`Falha ao ${isEditing ? 'atualizar' : 'cadastrar'}: ${erroMsg}`);
       }
 
-      navigate('/pets'); // Sucesso, voltar para a lista
+      navigate('/pets');
 
     } catch (err) {
       setError(err.message);
@@ -151,54 +141,47 @@ const PetForm = () => {
         <Link to="/pets" className="back-link">
           <Home size={18} /> Voltar para Pets
         </Link>
-        {/* 7. Título dinâmico */}
         <h1>{isEditing ? 'Editar Animal' : 'Cadastrar Novo Animal'}</h1>
       </header>
 
       {error && <p className="form-error">{error}</p>}
 
-      {/* 8. Formulário atualizado para usar o 'formData' e 'handleChange' */}
       <form className="pet-form" onSubmit={handleSubmit}>
+        {/* ... (inputs de nome, raça, dataNascimento, especie, sexo, porte, cor, tutor iguais) ... */}
         <div className="form-group">
           <label htmlFor="nome">Nome</label>
           <input id="nome" name="nome" type="text" value={formData.nome} onChange={handleChange} required />
         </div>
-
         <div className="form-group">
           <label htmlFor="raca">Raça</label>
           <input id="raca" name="raca" type="text" value={formData.raca} onChange={handleChange} />
         </div>
-
         <div className="form-group">
           <label htmlFor="dataNascimento">Data de Nascimento</label>
           <input id="dataNascimento" name="dataNascimento" type="date" value={formData.dataNascimento} onChange={handleChange} required />
         </div>
-
         <div className="form-group">
-          <label htmlFor="especie">Espécie</label>
-          <select id="especie" name="especie" value={formData.especie} onChange={handleChange}>
-            <option value="0">Cachorro</option>
-            <option value="1">Gato</option>
-          </select>
+            <label htmlFor="especie">Espécie</label>
+            <select id="especie" name="especie" value={formData.especie} onChange={handleChange}>
+                <option value="0">Cachorro</option>
+                <option value="1">Gato</option>
+            </select>
         </div>
-
         <div className="form-group">
-          <label htmlFor="sexo">Sexo</label>
-          <select id="sexo" name="sexo" value={formData.sexo} onChange={handleChange}>
-            <option value="0">Fêmea</option>
-            <option value="1">Macho</option>
-          </select>
+            <label htmlFor="sexo">Sexo</label>
+            <select id="sexo" name="sexo" value={formData.sexo} onChange={handleChange}>
+                <option value="0">Fêmea</option>
+                <option value="1">Macho</option>
+            </select>
         </div>
-
         <div className="form-group">
-          <label htmlFor="porte">Porte</label>
-          <select id="porte" name="porte" value={formData.porte} onChange={handleChange}>
-            <option value="0">Pequeno</option>
-            <option value="1">Médio</option>
-            <option value="2">Grande</option>
-          </select>
+            <label htmlFor="porte">Porte</label>
+            <select id="porte" name="porte" value={formData.porte} onChange={handleChange}>
+                <option value="0">Pequeno</option>
+                <option value="1">Médio</option>
+                <option value="2">Grande</option>
+            </select>
         </div>
-
         <div className="form-group">
           <label htmlFor="corId">Cor</label>
           <select id="corId" name="corId" value={formData.corId} onChange={handleChange} required>
@@ -208,7 +191,6 @@ const PetForm = () => {
             ))}
           </select>
         </div>
-
         <div className="form-group">
           <label htmlFor="tutorCpf">Tutor (Opcional)</label>
           <select id="tutorCpf" name="tutorCpf" value={formData.tutorCpf} onChange={handleChange}>
@@ -219,6 +201,7 @@ const PetForm = () => {
           </select>
         </div>
 
+        {/* Checkboxes agrupados */}
         <div className="form-group-checkbox">
           <label htmlFor="eFilhote">
             <input id="eFilhote" name="eFilhote" type="checkbox" checked={formData.eFilhote} onChange={handleChange} />
@@ -229,9 +212,14 @@ const PetForm = () => {
             <input id="statusAcolhimento" name="statusAcolhimento" type="checkbox" checked={formData.statusAcolhimento} onChange={handleChange} />
             Status Acolhimento Ativo?
           </label>
+
+          {/* --- NOVO CHECKBOX DE CASTRADO --- */}
+          <label htmlFor="castrado">
+            <input id="castrado" name="castrado" type="checkbox" checked={formData.castrado} onChange={handleChange} />
+            Castrado?
+          </label>
         </div>
 
-        {/* 9. Botão dinâmico */}
         <button type="submit" className="btn-salvar">
           {isEditing ? 'Atualizar Animal' : 'Salvar Animal'}
         </button>

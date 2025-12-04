@@ -1,10 +1,11 @@
+// Arquivo: sospets-react/src/pages/RelatoriosPage.js
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import "./RelatoriosPage.css";
 
-// Configuração da URL da API
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 const RelatoriosPage = () => {
@@ -45,7 +46,6 @@ const RelatoriosPage = () => {
     // eslint-disable-next-line
   }, [tipo]);
 
-  // Função de filtragem na tela
   const filtrarBusca = (item) => {
     if (!busca) return true;
     const termo = busca.toLowerCase();
@@ -55,7 +55,9 @@ const RelatoriosPage = () => {
         return (
           item.nome?.toLowerCase().includes(termo) ||
           item.tutor?.nome?.toLowerCase().includes(termo) ||
-          item.raca?.toLowerCase().includes(termo)
+          item.raca?.toLowerCase().includes(termo) ||
+          // --- LÓGICA DE FILTRO PARA CASTRADO ---
+          (item.castrado ? "sim" : "não").includes(termo) 
         );
       case "tutores":
         return item.nome?.toLowerCase().includes(termo);
@@ -76,7 +78,6 @@ const RelatoriosPage = () => {
     }
   };
 
-  // --- LÓGICA DE EXPORTAÇÃO PDF ---
   const exportarPDF = () => {
     const doc = new jsPDF();
     const dadosFiltrados = dados.filter(filtrarBusca);
@@ -85,36 +86,23 @@ const RelatoriosPage = () => {
     let linhas = [];
 
     if (tipo === "animais") {
-      // Adicionado "Castrado" no PDF
       colunas = ["Nome", "Espécie", "Raça", "Castrado", "Tutor"];
       linhas = dadosFiltrados.map(item => [
         item.nome,
         item.especie,
         item.raca,
-        item.castrado ? "Sim" : "Não", // Converte boolean para texto
+        item.castrado ? "Sim" : "Não",
         item.tutor?.nome || 'Sem tutor'
       ]);
     } else if (tipo === "tutores") {
       colunas = ["Nome", "CPF", "Telefone"];
-      linhas = dadosFiltrados.map(item => [
-        item.nome,
-        item.cpf,
-        item.telefone
-      ]);
+      linhas = dadosFiltrados.map(item => [item.nome, item.cpf, item.telefone]);
     } else if (tipo === "clinicas") {
       colunas = ["Nome", "Endereço", "Telefone"];
-      linhas = dadosFiltrados.map(item => [
-        item.nome,
-        item.endereco || item.enderco,
-        item.telefone
-      ]);
+      linhas = dadosFiltrados.map(item => [item.nome, item.endereco || item.enderco, item.telefone]);
     } else if (tipo === "funcionarios") {
       colunas = ["Nome", "CPF", "Profissão"];
-      linhas = dadosFiltrados.map(item => [
-        item.nome,
-        item.cpf,
-        item.profissao
-      ]);
+      linhas = dadosFiltrados.map(item => [item.nome, item.cpf, item.profissao]);
     } else if (tipo === "atendimentos") {
       colunas = ["Data", "Animal", "Tutor", "Colaborador", "Clínica", "Tipo", "Histórico"];
       linhas = dadosFiltrados.map(item => [
@@ -129,13 +117,7 @@ const RelatoriosPage = () => {
     }
 
     doc.text(`Relatório de ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`, 14, 15);
-    
-    autoTable(doc, {
-      head: [colunas],
-      body: linhas,
-      startY: 20,
-    });
-
+    autoTable(doc, { head: [colunas], body: linhas, startY: 20 });
     doc.save(`relatorio_${tipo}.pdf`);
   };
 
@@ -143,9 +125,7 @@ const RelatoriosPage = () => {
     <div className="relatorios-container">
       <div className="relatorios-header">
         <h1>Relatórios</h1>
-        <Link to="/" className="back-link">
-          ← Voltar
-        </Link>
+        <Link to="/" className="back-link">← Voltar</Link>
       </div>
 
       <div className="relatorios-filtros">
@@ -160,22 +140,14 @@ const RelatoriosPage = () => {
           </select>
         </div>
 
+        {/* Inputs de Data (Mantidos iguais) */}
         <div className="filtro">
           <label>Data início:</label>
-          <input
-            type="date"
-            value={dataInicio}
-            onChange={(e) => setDataInicio(e.target.value)}
-          />
+          <input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
         </div>
-
         <div className="filtro">
           <label>Data fim:</label>
-          <input
-            type="date"
-            value={dataFim}
-            onChange={(e) => setDataFim(e.target.value)}
-          />
+          <input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
         </div>
 
         <div className="filtro">
@@ -188,14 +160,8 @@ const RelatoriosPage = () => {
           />
         </div>
 
-        <button onClick={carregarDados} className="btn-filtrar">
-          Atualizar
-        </button>
-        
-        {/* Botão de Exportar PDF */}
-        <button onClick={exportarPDF} className="btn-filtrar" style={{ marginLeft: '10px', backgroundColor: '#dc3545' }}>
-          Baixar PDF
-        </button>
+        <button onClick={carregarDados} className="btn-filtrar">Atualizar</button>
+        <button onClick={exportarPDF} className="btn-filtrar" style={{ marginLeft: '10px', backgroundColor: '#dc3545' }}>Baixar PDF</button>
       </div>
 
       {erro && <div className="form-error">{erro}</div>}
@@ -207,99 +173,32 @@ const RelatoriosPage = () => {
             <thead>
               <tr>
                 {tipo === "animais" && (
-                  <>
-                    <th>Nome</th>
-                    <th>Espécie</th>
-                    <th>Raça</th>
-                    <th>Castrado</th> {/* Header Novo */}
-                    <th>Tutor</th>
-                  </>
+                  <><th>Nome</th><th>Espécie</th><th>Raça</th><th>Castrado</th><th>Tutor</th></>
                 )}
-                {tipo === "tutores" && (
-                  <>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>Telefone</th>
-                  </>
-                )}
-                {tipo === "clinicas" && (
-                  <>
-                    <th>Nome</th>
-                    <th>Endereço</th>
-                    <th>Telefone</th>
-                  </>
-                )}
-                {tipo === "funcionarios" && (
-                  <>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>Profissão</th>
-                  </>
-                )}
-                {tipo === "atendimentos" && (
-                  <>
-                    <th>Data</th>
-                    <th>Animal</th>
-                    <th>Tutor</th>
-                    <th>Colaborador</th>
-                    <th>Clínica</th>
-                    <th>Tipo</th>
-                    <th>Histórico</th>
-                  </>
-                )}
+                {/* Headers para outros tipos omitidos para brevidade, mas devem ser mantidos como no original */}
+                {tipo === "tutores" && <><th>Nome</th><th>CPF</th><th>Telefone</th></>}
+                {tipo === "clinicas" && <><th>Nome</th><th>Endereço</th><th>Telefone</th></>}
+                {tipo === "funcionarios" && <><th>Nome</th><th>CPF</th><th>Profissão</th></>}
+                {tipo === "atendimentos" && <><th>Data</th><th>Animal</th><th>Tutor</th><th>Colaborador</th><th>Clínica</th><th>Tipo</th><th>Histórico</th></>}
               </tr>
             </thead>
-
             <tbody>
               {dados.filter(filtrarBusca).map((item, index) => (
                 <tr key={item.id || item.cpf || index}>
-                  
                   {tipo === "animais" && (
                     <>
                       <td>{item.nome}</td>
                       <td>{item.especie}</td>
                       <td>{item.raca}</td>
-                      {/* Campo Novo: Castrado */}
                       <td>{item.castrado ? "Sim" : "Não"}</td>
                       <td>{item.tutor?.nome || 'Sem tutor'}</td>
                     </>
                   )}
-
-                  {tipo === "tutores" && (
-                    <>
-                      <td>{item.nome}</td>
-                      <td>{item.cpf}</td>
-                      <td>{item.telefone}</td>
-                    </>
-                  )}
-
-                  {tipo === "clinicas" && (
-                    <>
-                      <td>{item.nome}</td>
-                      <td>{item.endereco || item.enderco}</td>
-                      <td>{item.telefone}</td>
-                    </>
-                  )}
-
-                  {tipo === "funcionarios" && (
-                    <>
-                      <td>{item.nome}</td>
-                      <td>{item.cpf}</td>
-                      <td>{item.profissao}</td>
-                    </>
-                  )}
-
-                  {tipo === "atendimentos" && (
-                    <>
-                      <td>{item.dataGeracao ? new Date(item.dataGeracao).toLocaleDateString('pt-BR') : '-'}</td>
-                      <td>{item.animal?.nome || 'N/A'}</td>
-                      <td>{item.tutor?.nome || 'N/A'}</td>
-                      <td>{item.funcionario?.nome || 'N/A'}</td>
-                      <td>{item.clinica?.nome || item.statusClinica || '-'}</td>
-                      <td>{item.tipo}</td>
-                      <td>{item.historico}</td>
-                    </>
-                  )}
+                  {/* Linhas para outros tipos devem ser mantidas */}
+                  {tipo === "tutores" && <><td>{item.nome}</td><td>{item.cpf}</td><td>{item.telefone}</td></>}
+                  {tipo === "clinicas" && <><td>{item.nome}</td><td>{item.endereco || item.enderco}</td><td>{item.telefone}</td></>}
+                  {tipo === "funcionarios" && <><td>{item.nome}</td><td>{item.cpf}</td><td>{item.profissao}</td></>}
+                  {tipo === "atendimentos" && <><td>{item.dataGeracao ? new Date(item.dataGeracao).toLocaleDateString('pt-BR') : '-'}</td><td>{item.animal?.nome || 'N/A'}</td><td>{item.tutor?.nome || 'N/A'}</td><td>{item.funcionario?.nome || 'N/A'}</td><td>{item.clinica?.nome || item.statusClinica || '-'}</td><td>{item.tipo}</td><td>{item.historico}</td></>}
                 </tr>
               ))}
             </tbody>
