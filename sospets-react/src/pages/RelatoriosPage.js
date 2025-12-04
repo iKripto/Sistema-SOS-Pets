@@ -108,7 +108,7 @@ const RelatoriosPage = () => {
         item.profissao
       ]);
     } else if (tipo === "atendimentos") {
-      colunas = ["Data", "Animal", "Tutor", "Colaborador", "Clínica", "Tipo", "Histórico"];
+      colunas = ["Data", "Animal", "Tutor", "Voluntários", "Clínica", "Tipo", "Histórico"];
       linhas = dadosFiltrados.map(item => [
         item.dataGeracao ? new Date(item.dataGeracao).toLocaleDateString('pt-BR') : '-',
         item.animal?.nome || 'N/A',
@@ -149,7 +149,7 @@ const RelatoriosPage = () => {
             <option value="animais">Animais</option>
             <option value="tutores">Tutores</option>
             <option value="clinicas">Clínicas</option>
-            <option value="funcionarios">Colaboradores</option>
+            <option value="Voluntários">Colaboradores</option>
           </select>
         </div>
 

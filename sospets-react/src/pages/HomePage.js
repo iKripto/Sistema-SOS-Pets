@@ -32,7 +32,7 @@ const HomePage = () => {
         {/* LINK CORRIGIDO */}
         <Link to="/colaboradores" className="menu-card">
           <Home size={48} />
-          <span>Colaboradores</span>
+          <span>Voluntário</span>
         </Link>
 
         <Link to="/relatorios" className="menu-card">

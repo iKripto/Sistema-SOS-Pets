@@ -45,7 +45,7 @@ const CollaboratorPage = () => {
         }); // [cite: ikripto/fullstacksospets/FullStackSosPets-377f8109a3631bb635d066f623b4f36508380df4/backend/src/main/java/com/example/sospets/controllers/FuncionarioController.java]
 
         if (!response.ok) {
-          throw new Error('Falha ao excluir o colaborador.');
+          throw new Error('Falha ao excluir o voluntário.');
         }
         // Atualiza a lista local
         setColaboradores(colaboradores.filter(c => c.cpf !== cpf));
@@ -63,7 +63,7 @@ const CollaboratorPage = () => {
         <Link to="/" className="back-link">
           <Home size={18} /> Voltar ao Menu
         </Link>
-        <h1>Listagem de Colaboradores</h1>
+        <h1>Listagem de Voluntários</h1>
         {/* Botão Cadastrar (Fluxo A1) [cite: Curricularização SOS Pets-1.pdf, page 16] */}
         <Link to="/colaboradores/novo" className="btn-cadastrar">
           <Plus size={16} /> CADASTRAR
