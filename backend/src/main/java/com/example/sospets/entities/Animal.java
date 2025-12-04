@@ -29,11 +29,12 @@ public class Animal {
     private Especie especie;
     private Sexo sexo;
     private boolean statusAcolhimento;
+    private Boolean castrado;
     
-    // --- ALTERAÇÃO AQUI ---
-    // Mude de 'boolean' para 'Boolean' para aceitar valores nulos do banco
-    private Boolean castrado; 
-    // ----------------------
+    // --- NOVO CAMPO ---
+    @Column(columnDefinition = "TEXT") // Permite textos longos
+    private String observacoes;
+    // ------------------
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "tutor_id")

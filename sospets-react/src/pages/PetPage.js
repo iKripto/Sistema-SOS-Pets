@@ -10,8 +10,7 @@ const PetPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- CORREÇÃO AQUI ---
-  // Mapa expandido para aceitar tanto 0/1 (banco antigo) quanto FEMEA/MACHO (padrão Java)
+  // Mapa para garantir que Sexo e Espécie apareçam corretamente
   const sexoMap = { 
     0: 'Fêmea', 
     1: 'Macho',
@@ -29,7 +28,6 @@ const PetPage = () => {
     'Cachorro': 'Cachorro',
     'Gato': 'Gato'
   };
-  // ---------------------
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -94,6 +92,7 @@ const PetPage = () => {
               <th>FILHOTE</th>
               <th>SEXO</th>
               <th>CASTRADO</th>
+              <th>OBSERVAÇÕES</th> {/* COLUNA NOVA */}
               <th>DATA DE NASCIMENTO</th>
               <th>TUTOR</th>
               <th>AÇÕES</th>
@@ -105,16 +104,23 @@ const PetPage = () => {
                 <td>PET-{String(pet.id).padStart(3, '0')}</td>
                 <td>{pet.nome}</td>
                 
-                {/* Usa a função de fallback || para garantir que algo apareça */}
                 <td>{especieMap[pet.especie] || pet.especie}</td>
                 
                 <td>{pet.cor ? pet.cor.descricao : 'N/A'}</td> 
                 <td>{pet.eFilhote ? 'Sim' : 'Não'}</td>
                 
-                {/* Usa a função de fallback || para garantir que algo apareça */}
                 <td>{sexoMap[pet.sexo] || pet.sexo}</td>
                 
                 <td>{pet.castrado ? 'Sim' : 'Não'}</td>
+
+                {/* COLUNA NOVA: Exibe observações com limite de caracteres */}
+                <td title={pet.observacoes}>
+                    {pet.observacoes ? 
+                        (pet.observacoes.length > 30 ? pet.observacoes.substring(0, 30) + '...' : pet.observacoes) 
+                        : '-'
+                    }
+                </td>
+
                 <td>{new Date(pet.dataNascimento).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</td>
                 <td>{pet.tutor ? pet.tutor.nome : 'Sem tutor'}</td>
                 
