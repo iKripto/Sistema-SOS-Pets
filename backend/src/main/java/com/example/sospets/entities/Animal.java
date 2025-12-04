@@ -30,9 +30,10 @@ public class Animal {
     private Sexo sexo;
     private boolean statusAcolhimento;
     
-    // --- NOVO CAMPO ---
-    private boolean castrado; 
-    // ------------------
+    // --- ALTERAÇÃO AQUI ---
+    // Mude de 'boolean' para 'Boolean' para aceitar valores nulos do banco
+    private Boolean castrado; 
+    // ----------------------
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "tutor_id")
