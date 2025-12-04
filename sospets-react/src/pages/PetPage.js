@@ -5,7 +5,6 @@ import './PetPage.css';
 
 // Configuração da URL da API
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
- // [cite: ikripto/fullstacksospets/FullStackSosPets-86c84f912a08c7b71c676a96f956bfb3739f275d/sospets-react/src/pages/PetPage.css]
 
 const PetPage = () => {
   const [pets, setPets] = useState([]);
@@ -17,7 +16,6 @@ const PetPage = () => {
 
   useEffect(() => {
     const fetchPets = async () => {
-      // ... (código de fetchPets inalterado) ...
       setLoading(true);
       try {
         const response = await fetch(`${API_BASE_URL}/animais`);
@@ -36,7 +34,6 @@ const PetPage = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    // ... (código de handleDelete inalterado) ...
     if (window.confirm("Tem certeza que deseja excluir este item?")) {
       setError(null);
       try {
@@ -73,7 +70,6 @@ const PetPage = () => {
       <div className="table-container">
         <table>
           <thead>
-            {/* ... (cabeçalho da tabela inalterado) ... */}
             <tr>
               <th>CÓDIGO</th>
               <th>NOME</th>
@@ -81,6 +77,7 @@ const PetPage = () => {
               <th>COR</th>
               <th>FILHOTE</th>
               <th>SEXO</th>
+              <th>CASTRADO</th> {/* NOVA COLUNA */}
               <th>DATA DE NASCIMENTO</th>
               <th>TUTOR</th>
               <th>AÇÕES</th>
@@ -95,11 +92,14 @@ const PetPage = () => {
                 <td>{pet.cor ? pet.cor.descricao : 'N/A'}</td> 
                 <td>{pet.eFilhote ? 'Sim' : 'Não'}</td>
                 <td>{sexoMap[pet.sexo]}</td>
+                
+                {/* EXIBIÇÃO DO CAMPO CASTRADO */}
+                <td>{pet.castrado ? 'Sim' : 'Não'}</td>
+                
                 <td>{new Date(pet.dataNascimento).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</td>
                 <td>{pet.tutor ? pet.tutor.nome : 'Sem tutor'}</td>
                 
                 <td className="actions-cell">
-                  {/* BOTÃO EDITAR AGORA É UM LINK */}
                   <Link 
                     to={`/pets/editar/${pet.id}`} 
                     className="btn-action btn-edit"
