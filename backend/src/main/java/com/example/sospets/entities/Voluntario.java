@@ -28,7 +28,7 @@ public class Voluntario {
     private String cargo; 
     // FIM DOS NOVOS CAMPOS
 
-    @OneToMany(mappedBy = "funcionario")
+    @OneToMany(mappedBy = "voluntario")
     @JsonIgnore
     private List<Atendimento> atendimentos;
 }
