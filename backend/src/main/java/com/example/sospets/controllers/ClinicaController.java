@@ -45,7 +45,7 @@ public class ClinicaController {
     @PutMapping(value = ID)
     public ResponseEntity<Clinica> update(@PathVariable Integer id, @RequestBody Clinica clinica){
         clinica.setId(id);
-        return ResponseEntity.ok().body(mapper.map(clinica, Clinica.class));
+        return ResponseEntity.ok().body(mapper.map(service.update(clinica), Clinica.class));
     }
 
     @DeleteMapping(value = ID)

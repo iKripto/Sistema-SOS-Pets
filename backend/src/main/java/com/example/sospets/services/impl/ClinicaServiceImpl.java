@@ -5,7 +5,6 @@ import com.example.sospets.repositories.ClinicaRepo;
 import com.example.sospets.services.ClinicaService;
 import com.example.sospets.services.exceptions.ObjectNotFoundException;
 import com.example.sospets.validations.Validacoes;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +17,6 @@ public class ClinicaServiceImpl implements ClinicaService {
     @Autowired
     private ClinicaRepo repository;
 
-    @Autowired
-    private ModelMapper mapper;
-
     private void validarClinica(Clinica clinica) {
         if (clinica.getTelefone() == null || !Validacoes.validarTelefone(clinica.getTelefone())) {
             throw new IllegalArgumentException("O número de telefone é inválido.");
@@ -30,7 +26,7 @@ public class ClinicaServiceImpl implements ClinicaService {
     @Override
     public Clinica create(Clinica clinica) {
         validarClinica(clinica);
-        return repository.save(mapper.map(clinica, Clinica.class));
+        return repository.save(clinica);
     }
 
     public List<Clinica> findAll() {
@@ -47,7 +43,8 @@ public class ClinicaServiceImpl implements ClinicaService {
     @Override
     public Clinica update(Clinica clinica) {
         validarClinica(clinica);
-        return repository.save(mapper.map(clinica, Clinica.class));
+        findById(clinica.getId());
+        return repository.save(clinica);
     }
 
     @Override
