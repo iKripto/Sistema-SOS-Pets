@@ -3,14 +3,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Home } from 'react-feather';
 import './PetForm.css';
 
-// Configuração da URL da API
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 const PetForm = () => {
   const { id } = useParams();
-  const isEditing = Boolean(id); // True se 'id' existir
+  const isEditing = Boolean(id);
 
-  // 1. Estado Unificado do Formulário
   const [formData, setFormData] = useState({
     nome: '',
     raca: '',
@@ -20,46 +18,40 @@ const PetForm = () => {
     especie: '0',
     sexo: '0',
     statusAcolhimento: true,
-    castrado: false,     // <--- NOVO CAMPO: Castrado
-    observacoes: '',     // <--- NOVO CAMPO: Observações
-    corId: '',
+    castrado: false,
+    observacoes: '',
+    cor: '',
     tutorCpf: ''
   });
 
-  // Estados de controle
   const [cores, setCores] = useState([]);
   const [tutores, setTutores] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
-  
+
   const navigate = useNavigate();
 
-  // 2. Carregar Dados (Cores, Tutores e Animal se for Edição)
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError('');
       try {
-        // Busca Cores e Tutores em paralelo
         const [coresRes, tutoresRes] = await Promise.all([
           fetch(`${API_BASE_URL}/cor`),
           fetch(`${API_BASE_URL}/tutores`)
         ]);
-        
+
         const coresData = await coresRes.json();
         const tutoresData = await tutoresRes.json();
-        
+
         setCores(coresData);
         setTutores(tutoresData);
 
-        // Se for Edição, busca os dados do animal
         if (isEditing) {
           const animalRes = await fetch(`${API_BASE_URL}/animais/${id}`);
           if (!animalRes.ok) throw new Error('Animal não encontrado.');
-          
           const animal = await animalRes.json();
-          
-          // Preenche o formulário
+
           setFormData({
             nome: animal.nome,
             raca: animal.raca || '',
@@ -67,15 +59,11 @@ const PetForm = () => {
             dataNascimento: new Date(animal.dataNascimento).toISOString().split('T')[0],
             eFilhote: animal.eFilhote,
             especie: String(animal.especie),
-            sexo: String(animal.sexo), // Converte para string para o select
+            sexo: String(animal.sexo),
             statusAcolhimento: animal.statusAcolhimento,
-            
-            // --- CARREGA OS NOVOS CAMPOS DO BACKEND ---
             castrado: animal.castrado || false,
-            observacoes: animal.observacoes || '', 
-            // ------------------------------------------
-
-            corId: String(animal.cor.id),
+            observacoes: animal.observacoes || '',
+            cor: animal.cor?.descricao || '',
             tutorCpf: animal.tutor ? animal.tutor.cpf : ''
           });
         }
@@ -85,24 +73,22 @@ const PetForm = () => {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [id, isEditing]);
 
-  // 3. Manipulador de Mudanças (Inputs, Selects, Checkboxes)
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
+    setFormData(prev => ({
+      ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  // 4. Envio do Formulário (Salvar/Atualizar)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Monta o objeto JSON conforme esperado pelo Java
     const animalData = {
       nome: formData.nome,
       raca: formData.raca,
@@ -110,36 +96,24 @@ const PetForm = () => {
       dataNascimento: formData.dataNascimento,
       eFilhote: formData.eFilhote,
       especie: parseInt(formData.especie, 10),
-      // Sexo pode vir como string do select, garante conversão se necessário
       sexo: isNaN(parseInt(formData.sexo, 10)) ? formData.sexo : parseInt(formData.sexo, 10),
       statusAcolhimento: formData.statusAcolhimento,
-      
-      // --- ENVIA OS NOVOS CAMPOS ---
       castrado: formData.castrado,
       observacoes: formData.observacoes,
-      // -----------------------------
-
-      cor: { id: parseInt(formData.corId, 10) },
+      cor: { descricao: formData.cor },
       tutor: formData.tutorCpf ? { cpf: formData.tutorCpf } : null
     };
-    
-    // Define URL e Método (POST ou PUT)
-    const url = isEditing 
-      ? `${API_BASE_URL}/animais/${id}`
-      : `${API_BASE_URL}/animais`;
-      
-    const method = isEditing ? 'PUT' : 'POST';
 
-    // Se for PUT, o ID deve ir no corpo também
-    if (isEditing) {
-      animalData.id = parseInt(id, 10);
-    }
+    if (isEditing) animalData.id = parseInt(id, 10);
+
+    const url = isEditing ? `${API_BASE_URL}/animais/${id}` : `${API_BASE_URL}/animais`;
+    const method = isEditing ? 'PUT' : 'POST';
 
     try {
       const response = await fetch(url, {
-        method: method,
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(animalData),
+        body: JSON.stringify(animalData)
       });
 
       if (!response.ok) {
@@ -147,8 +121,7 @@ const PetForm = () => {
         throw new Error(`Falha ao ${isEditing ? 'atualizar' : 'cadastrar'}: ${erroMsg}`);
       }
 
-      navigate('/pets'); // Sucesso: volta para a lista
-
+      navigate('/pets');
     } catch (err) {
       setError(err.message);
     }
@@ -208,14 +181,25 @@ const PetForm = () => {
           </select>
         </div>
 
+        {/* CAMPO DE COR: INPUT + DATALIST */}
         <div className="form-group">
-          <label htmlFor="corId">Cor</label>
-          <select id="corId" name="corId" value={formData.corId} onChange={handleChange} required>
-            <option value="">Selecione uma cor</option>
+          <label htmlFor="cor">Cor</label>
+          <input
+            id="cor"
+            name="cor"
+            type="text"
+            value={formData.cor}
+            onChange={handleChange}
+            placeholder="Digite ou selecione uma cor"
+            list="cores-list"
+            required
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+          />
+          <datalist id="cores-list">
             {cores.map(cor => (
-              <option key={cor.id} value={cor.id}>{cor.descricao}</option>
+              <option key={cor.id} value={cor.descricao} />
             ))}
-          </select>
+          </datalist>
         </div>
 
         <div className="form-group">
@@ -228,15 +212,14 @@ const PetForm = () => {
           </select>
         </div>
 
-        {/* --- NOVO CAMPO: OBSERVAÇÕES --- */}
         <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
           <label htmlFor="observacoes">Observações</label>
-          <textarea 
-            id="observacoes" 
-            name="observacoes" 
-            value={formData.observacoes} 
-            onChange={handleChange} 
-            rows="3" 
+          <textarea
+            id="observacoes"
+            name="observacoes"
+            value={formData.observacoes}
+            onChange={handleChange}
+            rows="3"
             placeholder="Informações adicionais sobre o pet (alergias, comportamento, etc)"
             style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', marginTop: '5px' }}
           />
@@ -247,13 +230,12 @@ const PetForm = () => {
             <input id="eFilhote" name="eFilhote" type="checkbox" checked={formData.eFilhote} onChange={handleChange} />
             É filhote?
           </label>
-          
+
           <label htmlFor="statusAcolhimento">
             <input id="statusAcolhimento" name="statusAcolhimento" type="checkbox" checked={formData.statusAcolhimento} onChange={handleChange} />
             Status Acolhimento Ativo?
           </label>
 
-          {/* --- NOVO CHECKBOX: CASTRADO --- */}
           <label htmlFor="castrado">
             <input id="castrado" name="castrado" type="checkbox" checked={formData.castrado} onChange={handleChange} />
             Castrado?

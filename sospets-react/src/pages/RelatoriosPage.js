@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Home } from "react-feather";
 import "./RelatoriosPage.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
@@ -56,8 +57,7 @@ const RelatoriosPage = () => {
           item.nome?.toLowerCase().includes(termo) ||
           item.tutor?.nome?.toLowerCase().includes(termo) ||
           item.raca?.toLowerCase().includes(termo) ||
-          // --- LÓGICA DE FILTRO PARA CASTRADO ---
-          (item.castrado ? "sim" : "não").includes(termo) 
+          (item.castrado ? "sim" : "não").includes(termo)
         );
       case "tutores":
         return item.nome?.toLowerCase().includes(termo);
@@ -130,15 +130,16 @@ const RelatoriosPage = () => {
   };
 
   return (
-    
     <div className="relatorios-container">
-      <header className="pet-header">
-              <Link to="/" className="back-link">
-                <Home size={18} /> Voltar ao Menu
-              </Link>
-              <h1>Relatórios</h1>
-            </header>
+      {/* HEADER COM BOTÃO VOLTAR À ESQUERDA E TÍTULO CENTRALIZADO */}
+      <header className="relatorios-header">
+        <Link to="/" className="back-link">
+          <Home size={18} /> Voltar
+        </Link>
+        <h1>Relatórios</h1>
+      </header>
 
+      {/* FILTROS */}
       <div className="relatorios-filtros">
         <div className="filtro">
           <label>Tipo de relatório:</label>
@@ -151,11 +152,11 @@ const RelatoriosPage = () => {
           </select>
         </div>
 
-        {/* Inputs de Data (Mantidos iguais) */}
         <div className="filtro">
           <label>Data início:</label>
           <input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
         </div>
+
         <div className="filtro">
           <label>Data fim:</label>
           <input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
@@ -183,10 +184,7 @@ const RelatoriosPage = () => {
           <table>
             <thead>
               <tr>
-                {tipo === "animais" && (
-                  <><th>Nome</th><th>Espécie</th><th>Raça</th><th>Castrado</th><th>Tutor</th></>
-                )}
-                {/* Headers para outros tipos omitidos para brevidade, mas devem ser mantidos como no original */}
+                {tipo === "animais" && <><th>Nome</th><th>Espécie</th><th>Raça</th><th>Castrado</th><th>Tutor</th></>}
                 {tipo === "tutores" && <><th>Nome</th><th>CPF</th><th>Telefone</th></>}
                 {tipo === "clinicas" && <><th>Nome</th><th>Endereço</th><th>Telefone</th></>}
                 {tipo === "funcionarios" && <><th>Nome</th><th>CPF</th><th>Profissão</th></>}
@@ -196,16 +194,7 @@ const RelatoriosPage = () => {
             <tbody>
               {dados.filter(filtrarBusca).map((item, index) => (
                 <tr key={item.id || item.cpf || index}>
-                  {tipo === "animais" && (
-                    <>
-                      <td>{item.nome}</td>
-                      <td>{item.especie}</td>
-                      <td>{item.raca}</td>
-                      <td>{item.castrado ? "Sim" : "Não"}</td>
-                      <td>{item.tutor?.nome || 'Sem tutor'}</td>
-                    </>
-                  )}
-                  {/* Linhas para outros tipos devem ser mantidas */}
+                  {tipo === "animais" && <><td>{item.nome}</td><td>{item.especie}</td><td>{item.raca}</td><td>{item.castrado ? "Sim" : "Não"}</td><td>{item.tutor?.nome || 'Sem tutor'}</td></>}
                   {tipo === "tutores" && <><td>{item.nome}</td><td>{item.cpf}</td><td>{item.telefone}</td></>}
                   {tipo === "clinicas" && <><td>{item.nome}</td><td>{item.endereco || item.enderco}</td><td>{item.telefone}</td></>}
                   {tipo === "funcionarios" && <><td>{item.nome}</td><td>{item.cpf}</td><td>{item.profissao}</td></>}
