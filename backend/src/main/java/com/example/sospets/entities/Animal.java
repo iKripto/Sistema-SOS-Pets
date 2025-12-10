@@ -3,8 +3,11 @@ package com.example.sospets.entities;
 import com.example.sospets.enums.Especie;
 import com.example.sospets.enums.Porte;
 import com.example.sospets.enums.Sexo;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,8 +27,11 @@ public class Animal {
     private String nome;
     private String raca;
     private Porte porte;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent(message = "Data de nascimento não pode ser futura")
     private LocalDate dataNascimento;
-    private boolean eFilhote;
+    private boolean filhote;
     private Especie especie;
     private Sexo sexo;
     private boolean statusAcolhimento;
@@ -36,13 +42,14 @@ public class Animal {
     private String observacoes;
     // ------------------
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cor_id")
     private Cor cor;
+
 
     @OneToMany(mappedBy = "animal")
     @JsonIgnore

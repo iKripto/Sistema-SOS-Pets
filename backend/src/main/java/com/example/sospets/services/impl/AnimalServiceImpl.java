@@ -62,6 +62,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal create(Animal animal) {
+        validarAnimal(animal);
         setData(animal);
         return repository.save(animal); // Correto: Salva o objeto que já tem o tutor configurado
     }
@@ -93,6 +94,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal update(Animal animal) {
+        validarAnimal(animal);
         findById(animal.getId());
         setData(animal);
         return repository.save(animal); // Remova o mapper.map aqui também
