@@ -85,7 +85,7 @@ const TutorPage = () => {
               <th>CPF</th>
               <th>NOME</th>
               <th>RG</th>
-              <th>ENDREÇO</th>
+              <th>ENDEREÇO</th>
               <th>PROFISSÃO</th>
               <th>TELEFONE</th>
               <th>AÇÕES</th>

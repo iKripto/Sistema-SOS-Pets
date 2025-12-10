@@ -53,13 +53,13 @@ const AtendimentoForm = () => {
           const data = await atRes.json();
           setFormData({
             tipo: data.tipo,
-            dataGeracao: new Date(data.dataGeracao).toISOString().split('T')[0],
+            dataGeracao: data.dataGeracao,
             animalId: String(data.animal.id),
             tutorCpf: data.tutor?.cpf || '',
-            servidorCpf: data.servidor?.cpf || '',
+            servidorCpf: data.voluntario?.cpf || '',
             clinicaId: data.clinica ? String(data.clinica.id) : '',
             statusClinica: data.statusClinica || 'aguardando',
-            dataEstimada: data.dataEstimada ? new Date(data.dataEstimada).toISOString().split('T')[0] : '',
+            dataEstimada: data.dataEstimada || '',
             historico: data.historico || ''
           });
         }
@@ -87,7 +87,7 @@ const AtendimentoForm = () => {
       
       // --- CORREÇÃO AQUI ---
       // Mudamos de 'servidor' para 'funcionario' para bater com a Entidade Java
-      funcionario: { cpf: formData.servidorCpf }, 
+      voluntario: { cpf: formData.servidorCpf }, 
       
       clinica: formData.clinicaId ? { id: parseInt(formData.clinicaId) } : null,
       statusClinica: formData.statusClinica,
@@ -163,7 +163,7 @@ const AtendimentoForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="servidorCpf">Servidor Responsável</label>
+          <label htmlFor="servidorCpf">Voluntário Responsável</label>
           <select id="servidorCpf" name="servidorCpf" value={formData.servidorCpf} onChange={handleChange} required>
             <option value="">Selecione o servidor</option>
             {servidores.map(s => (

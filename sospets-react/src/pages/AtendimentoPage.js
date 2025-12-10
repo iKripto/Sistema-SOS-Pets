@@ -67,7 +67,7 @@ const AtendimentoPage = () => {
               <th>Data Geração</th>
               <th>Animal</th>
               <th>Tutor</th>
-              <th>Servidor</th>
+              <th>Voluntário</th>
               <th>Clínica / Status</th>
               <th>Data Estimada</th>
               <th>Ações</th>

@@ -34,12 +34,12 @@ const CollaboratorForm = () => {
         try {
           const response = await fetch(`${API_BASE_URL}/funcionarios/${cpf}`);
           if (!response.ok) {
-            throw new Error('Colaborador não encontrado.');
+            throw new Error('Voluntário não encontrado.');
           }
           const data = await response.json();
           setFormData(data);
         } catch (err) {
-          setError('Falha ao carregar dados do colaborador: ' + err.message);
+          setError('Falha ao carregar dados do voluntário: ' + err.message);
         } finally {
           setLoading(false);
         }
@@ -92,9 +92,9 @@ const CollaboratorForm = () => {
     <div className="pet-form-container">
       <header className="pet-header">
         <Link to="/colaboradores" className="back-link">
-          <Home size={18} /> Voltar para Colaboradores
+          <Home size={18} /> Voltar para Voluntários
         </Link>
-        <h1>{isEditing ? 'Editar Colaborador' : 'Cadastrar Novo Colaborador'}</h1>
+        <h1>{isEditing ? 'Editar Voluntário' : 'Cadastrar Novo Voluntário'}</h1>
       </header>
 
       {error && <p className="form-error">{error}</p>}
