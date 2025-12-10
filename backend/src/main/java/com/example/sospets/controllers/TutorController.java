@@ -2,6 +2,7 @@ package com.example.sospets.controllers;
 
 import com.example.sospets.entities.Tutor;
 import com.example.sospets.services.TutorService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class TutorController {
     private ModelMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Tutor> create(@RequestBody Tutor tutor) {
+    public ResponseEntity<Tutor> create(@Valid @RequestBody Tutor tutor) {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path(CPF).buildAndExpand(service.create(tutor).getCpf()).toUri();
         return ResponseEntity.created(uri).build();
     }
@@ -48,7 +49,7 @@ public class TutorController {
     }
 
     @PutMapping(value = CPF)
-    public ResponseEntity<Tutor> update(@PathVariable String cpf, @RequestBody Tutor tutor) {
+    public ResponseEntity<Tutor> update(@Valid @PathVariable String cpf, @RequestBody Tutor tutor) {
         tutor.setCpf(cpf);
         return ResponseEntity.ok().body(mapper.map(service.update(tutor), Tutor.class));
     }

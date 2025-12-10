@@ -40,6 +40,7 @@ public class TutorServiceImpl implements TutorService {
 
     @Override
     public Tutor create(Tutor tutor) {
+        validarTutor(tutor);
         return repository.save(mapper.map(tutor, Tutor.class));
     }
 
@@ -61,12 +62,18 @@ public class TutorServiceImpl implements TutorService {
 
     @Override
     public Tutor update(Tutor tutor) {
+        validarTutor(tutor);
         return repository.save(mapper.map(tutor, Tutor.class));
     }
 
     @Override
     public void delete(String cpf) {
-        repository.deleteByCpf(cpf);
-    }
+        Tutor tutor = repository.findByCpf(cpf)
+                .orElseThrow(() -> new ObjectNotFoundException("Tutor não encontrado"));
 
+        if (tutor.getAnimais() != null && !tutor.getAnimais().isEmpty()) {
+            throw new IllegalArgumentException("Tutor possui animais cadastrados e não pode ser excluído");
+        }
+        repository.delete(tutor);
+    }
 }
