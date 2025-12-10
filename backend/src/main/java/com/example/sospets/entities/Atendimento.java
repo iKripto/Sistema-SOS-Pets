@@ -42,7 +42,7 @@ public class Atendimento {
 
     @ManyToOne(cascade =  CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "funcionario_id")
-    private Funcionario funcionario;
+    private Voluntario voluntario;
 
     // O Frontend envia Tutor, precisamos mapear
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)

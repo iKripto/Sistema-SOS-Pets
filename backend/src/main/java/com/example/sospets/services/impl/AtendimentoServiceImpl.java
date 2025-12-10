@@ -7,12 +7,12 @@ import java.util.Map;
 import com.example.sospets.entities.Animal;
 import com.example.sospets.entities.Atendimento;
 import com.example.sospets.entities.Clinica;
-import com.example.sospets.entities.Funcionario;
+import com.example.sospets.entities.Voluntario;
 import com.example.sospets.entities.Tutor; // [NOVO IMPORT]
 import com.example.sospets.repositories.AnimalRepo;
 import com.example.sospets.repositories.AtendimentoRepo;
 import com.example.sospets.repositories.ClinicaRepo;
-import com.example.sospets.repositories.FuncionarioRepo;
+import com.example.sospets.repositories.VoluntarioRepo;
 import com.example.sospets.repositories.TutorRepo; // [NOVO IMPORT]
 import com.example.sospets.services.AtendimentoService;
 import com.example.sospets.services.exceptions.ObjectNotFoundException;
@@ -36,7 +36,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
     private ClinicaRepo clinicaRepo;
 
     @Autowired
-    private FuncionarioRepo funcionarioRepo;
+    private VoluntarioRepo voluntarioRepo;
     
     @Autowired
     private TutorRepo tutorRepo; // [INJEÇÃO NOVA]
@@ -66,12 +66,12 @@ public class AtendimentoServiceImpl implements AtendimentoService {
         }
 
         // 3. BUSCA OBRIGATÓRIA DE FUNCIONÁRIO
-        if (atendimento.getFuncionario() == null || atendimento.getFuncionario().getCpf() == null) {
+        if (atendimento.getVoluntario() == null || atendimento.getVoluntario().getCpf() == null) {
             throw new RuntimeException("Funcionário responsável é obrigatório.");
         }
-        Funcionario funcionario = funcionarioRepo.findByCpf(atendimento.getFuncionario().getCpf())
+        Voluntario voluntario = voluntarioRepo.findByCpf(atendimento.getVoluntario().getCpf())
                 .orElseThrow(()-> new RuntimeException("Funcionário não encontrado"));
-        atendimento.setFuncionario(funcionario);
+        atendimento.setVoluntario(voluntario);
 
         // 4. BUSCA OPCIONAL DE TUTOR (Novo bloco)
         // O Frontend envia o CPF do tutor se ele existir
