@@ -104,7 +104,7 @@ const RelatoriosPage = () => {
       colunas = ["Nome", "CPF", "Profissão"];
       linhas = dadosFiltrados.map(item => [item.nome, item.cpf, item.profissao]);
     } else if (tipo === "atendimentos") {
-      colunas = ["Data", "Animal", "Tutor", "Colaborador", "Clínica", "Tipo", "Histórico"];
+      colunas = ["Data", "Animal", "Tutor", "Voluntário", "Clínica", "Tipo", "Histórico"];
       linhas = dadosFiltrados.map(item => [
         item.dataGeracao ? new Date(item.dataGeracao).toLocaleDateString('pt-BR') : '-',
         item.animal?.nome || 'N/A',
@@ -116,17 +116,28 @@ const RelatoriosPage = () => {
       ]);
     }
 
-    doc.text(`Relatório de ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`, 14, 15);
+    const tituloMap = {
+      atendimentos: "Atendimentos",
+      animais: "Animais",
+      tutores: "Tutores",
+      clinicas: "Clínicas",
+      funcionarios: "Voluntários"
+    };
+
+    doc.text(`Relatório de ${tituloMap[tipo]}`, 14, 15);
     autoTable(doc, { head: [colunas], body: linhas, startY: 20 });
     doc.save(`relatorio_${tipo}.pdf`);
   };
 
   return (
+    
     <div className="relatorios-container">
-      <div className="relatorios-header">
-        <h1>Relatórios</h1>
-        <Link to="/" className="back-link">← Voltar</Link>
-      </div>
+      <header className="pet-header">
+              <Link to="/" className="back-link">
+                <Home size={18} /> Voltar ao Menu
+              </Link>
+              <h1>Relatórios</h1>
+            </header>
 
       <div className="relatorios-filtros">
         <div className="filtro">
@@ -136,7 +147,7 @@ const RelatoriosPage = () => {
             <option value="animais">Animais</option>
             <option value="tutores">Tutores</option>
             <option value="clinicas">Clínicas</option>
-            <option value="funcionarios">Colaboradores</option>
+            <option value="funcionarios">Voluntários</option>
           </select>
         </div>
 
@@ -179,7 +190,7 @@ const RelatoriosPage = () => {
                 {tipo === "tutores" && <><th>Nome</th><th>CPF</th><th>Telefone</th></>}
                 {tipo === "clinicas" && <><th>Nome</th><th>Endereço</th><th>Telefone</th></>}
                 {tipo === "funcionarios" && <><th>Nome</th><th>CPF</th><th>Profissão</th></>}
-                {tipo === "atendimentos" && <><th>Data</th><th>Animal</th><th>Tutor</th><th>Colaborador</th><th>Clínica</th><th>Tipo</th><th>Histórico</th></>}
+                {tipo === "atendimentos" && <><th>Data</th><th>Animal</th><th>Tutor</th><th>Voluntário</th><th>Clínica</th><th>Tipo</th><th>Histórico</th></>}
               </tr>
             </thead>
             <tbody>
