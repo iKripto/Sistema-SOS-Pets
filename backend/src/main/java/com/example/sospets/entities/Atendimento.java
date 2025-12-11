@@ -45,7 +45,7 @@ public class Atendimento {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "voluntario_cpf", nullable = false)
-    private Voluntario voluntario;
+    private Funcionario funcionario;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tutor_cpf")

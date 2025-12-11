@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Voluntario {
+public class Funcionario {
     @Id
     private String cpf;
     private String nome;
