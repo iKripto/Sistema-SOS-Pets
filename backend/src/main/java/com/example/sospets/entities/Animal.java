@@ -28,7 +28,7 @@ public class Animal {
     private String raca;
     private Porte porte;
 
-    @PastOrPresent(message = "Data de nascimento não pode ser futura")
+    @PastOrPresent
     private LocalDate dataNascimento;
     private boolean filhote;
     private Especie especie;
