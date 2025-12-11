@@ -3,7 +3,6 @@ package com.example.sospets.controllers;
 import com.example.sospets.entities.Animal;
 import com.example.sospets.enums.Especie;
 import com.example.sospets.services.AnimalService;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +49,7 @@ public class AnimalController {
 
     @GetMapping(value = "/busca", params = {"nome", "especie"})
     public ResponseEntity<List<Animal>>
-        findByNomeContainingIgnoreCaseAndEspecie(@RequestParam ("nome") String nome, @RequestParam ("especie") String especie){
+    findByNomeContainingIgnoreCaseAndEspecie(@RequestParam ("nome") String nome, @RequestParam ("especie") String especie){
         return ResponseEntity.ok().body(service.findByNomeContainingIgnoreCaseAndEspecie(nome, Especie.valueOf(especie)).stream()
                 .map(a -> mapper.map(a, Animal.class)).collect(Collectors.toList()));
     }
@@ -58,7 +57,7 @@ public class AnimalController {
 
     @GetMapping(value = "/busca/ordenada", params = {"especie"})
     public ResponseEntity<List<Animal>>
-        findByEspecieOrderByNomeDesc(@RequestParam ("especie") String especie){
+    findByEspecieOrderByNomeDesc(@RequestParam ("especie") String especie){
         return ResponseEntity.ok().body(service.findByEspecieOrderByNomeDesc(Especie.valueOf(especie)));
     }
 

@@ -94,10 +94,10 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal update(Animal animal) {
-        validarAnimal(animal);
         findById(animal.getId());
+        validarAnimal(animal);
         setData(animal);
-        return repository.save(animal); // Remova o mapper.map aqui também
+        return repository.save(animal);
     }
 
     public void delete(Integer id){
