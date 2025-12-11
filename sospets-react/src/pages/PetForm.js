@@ -181,25 +181,14 @@ const PetForm = () => {
           </select>
         </div>
 
-        {/* CAMPO DE COR: INPUT + DATALIST */}
         <div className="form-group">
-          <label htmlFor="cor">Cor</label>
-          <input
-            id="cor"
-            name="cor"
-            type="text"
-            value={formData.cor}
-            onChange={handleChange}
-            placeholder="Digite ou selecione uma cor"
-            list="cores-list"
-            required
-            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-          />
-          <datalist id="cores-list">
+          <label htmlFor="corId">Cor</label>
+          <select id="corId" name="corId" value={formData.corId} onChange={handleChange} required>
+            <option value="">Selecione uma cor</option>
             {cores.map(cor => (
-              <option key={cor.id} value={cor.descricao} />
+              <option key={cor.id} value={cor.id}>{cor.descricao}</option>
             ))}
-          </datalist>
+          </select>
         </div>
 
         <div className="form-group">

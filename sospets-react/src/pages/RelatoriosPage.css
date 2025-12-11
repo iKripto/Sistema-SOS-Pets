@@ -11,7 +11,7 @@
 .relatorios-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   position: relative;      
   margin-bottom: 1.8rem;
 }
