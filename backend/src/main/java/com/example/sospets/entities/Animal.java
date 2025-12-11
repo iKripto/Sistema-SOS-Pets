@@ -28,7 +28,6 @@ public class Animal {
     private String raca;
     private Porte porte;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
     @PastOrPresent(message = "Data de nascimento não pode ser futura")
     private LocalDate dataNascimento;
     private boolean filhote;
