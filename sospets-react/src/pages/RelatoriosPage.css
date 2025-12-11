@@ -43,11 +43,12 @@
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
 .btn-baixar:hover {
   background-color: #c9302c;
+  transform: scale(1.03);
 }
 
 .relatorios-filtros {

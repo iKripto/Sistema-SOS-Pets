@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { Home } from "react-feather";
+import { Home, Download } from "react-feather";
 import "./RelatoriosPage.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
@@ -136,7 +136,7 @@ const RelatoriosPage = () => {
           <Home size={18} /> Voltar ao Menu
         </Link>
         <h1>Relatórios</h1>
-        <button onClick={exportarPDF} className="btn-baixar">Baixar PDF</button>
+        <button onClick={exportarPDF} className="btn-baixar"><Download size={18}/> BAIXAR PDF</button>
       </header>
 
       {/* FILTROS */}
@@ -172,7 +172,7 @@ const RelatoriosPage = () => {
           />
         </div>
 
-        <button onClick={carregarDados} className="btn-filtrar">Atualizar</button>
+        <button onClick={carregarDados} className="btn-filtrar">ATUALIZAR</button>
       </div>
 
       {erro && <div className="form-error">{erro}</div>}

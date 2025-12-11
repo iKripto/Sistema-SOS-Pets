@@ -13,6 +13,16 @@ const HomePage = () => {
       </header>
 
       <main className="home-grid" style={{ backgroundImage: `url(${backgroundImage})` }}>
+
+        <Link to="/atendimentos" className="menu-card">
+          <Heart size={48} />
+          <span>Atendimentos</span>
+        </Link>
+
+        <Link to="/clinicas" className="menu-card">
+          <PlusSquare size={48} />
+          <span>Clínicas</span>
+        </Link>
         
         <Link to="/pets" className="menu-card">
           <GitHub size={48} /> 
@@ -24,20 +34,10 @@ const HomePage = () => {
           <span>Tutores</span>
         </Link>
         
-        <Link to="/clinicas" className="menu-card">
-          <PlusSquare size={48} />
-          <span>Clínicas</span>
-        </Link>
-        
         {/* LINK CORRIGIDO */}
         <Link to="/colaboradores" className="menu-card">
           <Home size={48} />
           <span>Voluntários</span>
-        </Link>
-
-        <Link to="/atendimentos" className="menu-card">
-          <Heart size={48} />
-          <span>Atendimentos</span>
         </Link>
 
         <Link to="/relatorios" className="menu-card">
