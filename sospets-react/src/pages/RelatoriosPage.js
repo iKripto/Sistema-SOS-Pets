@@ -136,6 +136,7 @@ const RelatoriosPage = () => {
           <Home size={18} /> Voltar ao Menu
         </Link>
         <h1>Relatórios</h1>
+        <button onClick={exportarPDF} className="btn-baixar">Baixar PDF</button>
       </header>
 
       {/* FILTROS */}
@@ -172,7 +173,6 @@ const RelatoriosPage = () => {
         </div>
 
         <button onClick={carregarDados} className="btn-filtrar">Atualizar</button>
-        <button onClick={exportarPDF} className="btn-filtrar" style={{ marginLeft: '10px', backgroundColor: '#dc3545' }}>Baixar PDF</button>
       </div>
 
       {erro && <div className="form-error">{erro}</div>}

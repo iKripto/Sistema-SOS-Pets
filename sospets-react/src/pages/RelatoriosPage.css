@@ -17,6 +17,7 @@
 }
 
 .relatorios-header h1 {
+  justify-content: center;
   font-size: 1.6rem;
   font-weight: 600;
   color: #333;
@@ -29,6 +30,24 @@
   text-decoration: none;
   color: #0d6efd;
   font-weight: 500;
+}
+
+.btn-baixar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: #d9534f; /* Vermelho do protótipo */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-baixar:hover {
+  background-color: #c9302c;
 }
 
 .relatorios-filtros {
