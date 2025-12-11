@@ -26,7 +26,7 @@ public class AnimalController {
     private AnimalService service;
 
     @PostMapping
-    public ResponseEntity<Animal> create(@Valid @RequestBody Animal animal){
+    public ResponseEntity<Animal> create(@RequestBody Animal animal){
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path(ID).buildAndExpand(service.create(animal).getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
@@ -63,7 +63,7 @@ public class AnimalController {
     }
 
     @PutMapping(value = ID)
-    public ResponseEntity<Animal> update (@PathVariable Integer id, @Valid @RequestBody Animal animal){
+    public ResponseEntity<Animal> update (@PathVariable Integer id, @RequestBody Animal animal){
         animal.setId(id);
         return ResponseEntity.ok().body(mapper.map(service.update(animal), Animal.class));
     }

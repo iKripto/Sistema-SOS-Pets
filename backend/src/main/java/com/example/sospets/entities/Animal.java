@@ -27,8 +27,6 @@ public class Animal {
     private String nome;
     private String raca;
     private Porte porte;
-
-    @PastOrPresent
     private LocalDate dataNascimento;
     private boolean filhote;
     private Especie especie;
