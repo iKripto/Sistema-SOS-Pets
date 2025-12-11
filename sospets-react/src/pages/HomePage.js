@@ -16,12 +16,12 @@ const HomePage = () => {
         
         <Link to="/pets" className="menu-card">
           <GitHub size={48} /> 
-          <span>Pet</span>
+          <span>Pets</span>
         </Link>
 
         <Link to="/tutores" className="menu-card">
           <User size={48} />
-          <span>Tutor</span>
+          <span>Tutores</span>
         </Link>
         
         <Link to="/clinicas" className="menu-card">
@@ -35,14 +35,14 @@ const HomePage = () => {
           <span>Voluntários</span>
         </Link>
 
-        <Link to="/relatorios" className="menu-card">
-          <FileText size={48} />
-          <span>Relatórios</span>
-        </Link>
-
         <Link to="/atendimentos" className="menu-card">
           <Heart size={48} />
           <span>Atendimentos</span>
+        </Link>
+
+        <Link to="/relatorios" className="menu-card">
+          <FileText size={48} />
+          <span>Relatórios</span>
         </Link>
       </main>
     </div>

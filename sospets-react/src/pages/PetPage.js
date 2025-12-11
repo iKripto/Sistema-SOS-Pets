@@ -85,7 +85,7 @@ const PetPage = () => {
         <table>
           <thead>
             <tr>
-              <th>CÓDIGO</th>
+              <th>ID</th>
               <th>NOME</th>
               <th>ESPÉCIE</th>
               <th>COR</th>

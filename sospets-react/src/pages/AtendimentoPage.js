@@ -63,14 +63,14 @@ const AtendimentoPage = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Tipo</th>
-              <th>Data Geração</th>
-              <th>Animal</th>
-              <th>Tutor</th>
-              <th>Voluntário</th>
-              <th>Clínica / Status</th>
-              <th>Data Estimada</th>
-              <th>Ações</th>
+              <th>TIPO</th>
+              <th>DATA GERAÇÃO</th>
+              <th>ANIMAL</th>
+              <th>TUTOR</th>
+              <th>VOLUNTÁRIO</th>
+              <th>CLÍNICA/STATUS</th>
+              <th>DATA ESTIMADA</th>
+              <th>AÇÕES</th>
             </tr>
           </thead>
           <tbody>

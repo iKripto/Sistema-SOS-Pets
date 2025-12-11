@@ -131,10 +131,9 @@ const RelatoriosPage = () => {
 
   return (
     <div className="relatorios-container">
-      {/* HEADER COM BOTÃO VOLTAR À ESQUERDA E TÍTULO CENTRALIZADO */}
       <header className="relatorios-header">
         <Link to="/" className="back-link">
-          <Home size={18} /> Voltar
+          <Home size={18} /> Voltar ao Menu
         </Link>
         <h1>Relatórios</h1>
       </header>
@@ -184,11 +183,11 @@ const RelatoriosPage = () => {
           <table>
             <thead>
               <tr>
-                {tipo === "animais" && <><th>Nome</th><th>Espécie</th><th>Raça</th><th>Castrado</th><th>Tutor</th></>}
-                {tipo === "tutores" && <><th>Nome</th><th>CPF</th><th>Telefone</th></>}
-                {tipo === "clinicas" && <><th>Nome</th><th>Endereço</th><th>Telefone</th></>}
-                {tipo === "funcionarios" && <><th>Nome</th><th>CPF</th><th>Profissão</th></>}
-                {tipo === "atendimentos" && <><th>Data</th><th>Animal</th><th>Tutor</th><th>Voluntário</th><th>Clínica</th><th>Tipo</th><th>Histórico</th></>}
+                {tipo === "animais" && <><th>NOME</th><th>ESPÉCIE</th><th>RAÇA</th><th>CASTRADO</th><th>TUTOR</th></>}
+                {tipo === "tutores" && <><th>NOME</th><th>CPF</th><th>TELEFONE</th></>}
+                {tipo === "clinicas" && <><th>NOME</th><th>ENDEREÇO</th><th>TELEFONE</th></>}
+                {tipo === "funcionarios" && <><th>NOME</th><th>CPF</th><th>PROFISSÃO</th></>}
+                {tipo === "atendimentos" && <><th>DATA</th><th>ANIMAL</th><th>TUTOR</th><th>VOLUNTÁRIO</th><th>CLÍNICA</th><th>TIPO</th><th>DESCRIÇÃO</th></>}
               </tr>
             </thead>
             <tbody>
